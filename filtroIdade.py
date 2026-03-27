@@ -1,7 +1,5 @@
 import pandas as pd
 
-arquivocsv = 'vacinas.csv'
-
 """
 vai produzir um arquivo csv com as informações de 
 vacina de uma determinada faixa etária
