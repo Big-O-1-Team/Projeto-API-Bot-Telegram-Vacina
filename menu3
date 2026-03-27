@@ -1,0 +1,79 @@
+import telebot
+from telebot import types
+import dotenv
+import os
+import pandas as pd
+
+#tabela csv base
+dados_vacinas = {
+    'Categoria': ['gestante', 'criança', 'adolescente', 'adulto', 'idoso'],
+    'Informação': [
+        'Informação gestante',
+        'Informação criança',
+        'Informação adolescente',
+        'Informação adulto',
+        'Informação idoso'
+    ]
+}
+df = pd.DataFrame(dados_vacinas)
+df.to_csv('tab-categorias.csv', index=False, encoding='utf-8-sig')
+
+
+# armazenar chave de forma segura
+dotenv.load_dotenv()
+bot_key = os.getenv('bot_token')
+#criar bot
+bot = telebot.TeleBot(bot_key, parse_mode=None)  # TeleBot, não Telebot
+
+# função para o bot receber e responder algo
+@bot.message_handler(commands=['start'])
+def receber(message):
+    #criar botões e definir quantos por linha (row_width=x)
+    markup = types.InlineKeyboardMarkup(row_width=5)
+
+    #personalizar botões
+    bt_gestante = types.InlineKeyboardButton('gestante', callback_data='cat_gestante')
+    bt_crianca = types.InlineKeyboardButton('criança', callback_data='cat_crianca')
+    bt_adolescente = types.InlineKeyboardButton('jovem', callback_data='cat_adolescente')
+    bt_adulto = types.InlineKeyboardButton('adulto', callback_data='cat_adulto')
+    bt_idoso = types.InlineKeyboardButton('idoso', callback_data='cat_idoso')
+
+    #"inicar" botões
+    markup.add(bt_gestante, bt_crianca, bt_adolescente, bt_adulto, bt_idoso)
+    #bot enviar mensagem
+    bot.send_message(message.chat.id, 'Selecione sua categoria:', reply_markup=markup)
+
+
+#resposta ao clique do botão
+@bot.callback_query_handler(func=lambda call: True)
+#identificar categoria
+def responder_categoria(callback):
+    if callback.data == 'cat_gestante':
+        categoria = 'gestante'
+    elif callback.data == 'cat_crianca':
+        categoria = 'criança'
+    elif callback.data == 'cat_adolescente':
+        categoria = 'adolescente'
+    elif callback.data == 'cat_adulto':
+        categoria = 'adulto'
+    elif callback.data == 'cat_idoso':
+        categoria = 'idoso'
+
+    #lê o csv
+    tabela = pd.read_csv('tab-categorias.csv', encoding='utf-8-sig')
+
+    #Identifica a categoria
+    linha = tabela[tabela['Categoria'] == categoria]
+
+    # verifica se encontrou e responde
+    if not linha.empty: #mesma coisa que if len(linha) > 0 / .empty retorna True se o df estiver vazio
+        informacao = linha['Informação'].values[0] #-> values[0] tranforma em array pura
+        bot.send_message(callback.message.chat.id, f'*{categoria.capitalize()}*\n\n{informacao}', parse_mode='Markdown') #->capitalize transforma a primeira letra em maiuscula
+    else:
+        bot.send_message(callback.message.chat.id, 'Categoria não encontrada.')
+
+def main():
+    print('Bot rodando')
+    bot.infinity_polling()
+
+main()
