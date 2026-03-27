@@ -1,0 +1,53 @@
+import telebot
+from telebot import types
+import os
+import dotenv
+
+# armazenar a chave do bot de forma segura
+dotenv.load_dotenv()
+bot_key = os.getenv('bot_token')
+
+# criar bot ligado com a chave
+bot = telebot.TeleBot(bot_key, parse_mode=None)
+
+# dicionário para guardar idades
+idades = {}
+
+# função para o bot receber algo e retornar algo
+@bot.message_handler(commands=['start'])
+def receber(message):
+    # criar botões / row_width = x define quantos botões por linha
+    markup = types.InlineKeyboardMarkup(row_width=3)
+
+    # personalizar botões
+    calendario_vacinal = types.InlineKeyboardButton(
+        'Conferir calendário de vacinas', callback_data='answer_calendario_vacinal')
+    unidades_proximas = types.InlineKeyboardButton(
+        'Buscar postos de vacinação', callback_data='answer_unidades_proximas')
+
+    # "iniciar" botões
+    markup.add(calendario_vacinal, unidades_proximas)
+
+    # bot enviar mensagem
+    bot.send_message(message.chat.id, 'Olá! Meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir? (Selecione uma das opções abaixo', reply_markup=markup)
+
+# #resposta ao click do botão
+@bot.callback_query_handler(func=lambda call: True)
+def answer(callback):
+    if callback.data == "answer_calendario_vacinal":
+        pergunta_idade = pergunta_idade.send_message(
+            callback.message.chat.id, "Qual sua idade?")
+        bot.register_next_step_handler(pergunta_idade, salvar_idade)
+
+
+def salvar_idade(message):
+    idade = int(message.text)
+    idades[message.chat.id] = idade
+
+
+# função main normal (telebot não suporta função assincrona)
+def main():
+    # função para manter o bot funcionando (em ciclo)
+    bot.infinity_polling()
+
+main()
