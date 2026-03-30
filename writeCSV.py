@@ -13,5 +13,5 @@ def newLine(vetor, tabela):
     print(tabela)
     return tabela
 
-def mostrarTabelA(tabela):
+def mostrarTabela(tabela):
     print(tabela)
