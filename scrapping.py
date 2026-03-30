@@ -72,10 +72,4 @@ def extrairDadosVacinacao(url):     #Extrai os dados de vacinação da página d
             dados.append((categoria, texto))
     return dados
 
-def mostrar_dados(dados):       #Exibe os dados de vacinação no console de forma organizada para facilitar a leitura
-    print('\nCALENDÁRIO DE VACINAÇÃO\n')
-    for categoria, info in dados:
-        print('categoria:', categoria)
-        print('Vacina/Info:', info)
-        print('-' * 40)
 
