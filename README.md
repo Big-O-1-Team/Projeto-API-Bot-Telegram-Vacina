@@ -3,7 +3,7 @@
 
 <div align = "center">
 
-##Equipe🎓
+## Equipe🎓
 | Função | Nome | LinkedIn | GitHub |
 |:--------:|:------:|:----------:|:--------:|
 | Scrum Master | Lennon Vinicius de Moraes Soares |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/LennonVinicius) |
