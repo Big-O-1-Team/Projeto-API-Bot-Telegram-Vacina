@@ -1,2 +1,3 @@
 # Projeto-API-Bot-Telegram-Vacina
-![foto]([https://logosmarcas.net/telegram-logo/](https://logosmarcas.net/wp-content/uploads/2021/03/Telegram-Logo-2019-presenta.jpg))
+
+[![Linkedin Badge](https://img.shields.io/badge/Linkedin-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/)
