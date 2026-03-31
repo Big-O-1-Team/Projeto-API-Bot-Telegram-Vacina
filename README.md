@@ -19,4 +19,12 @@
 </div>
 ---
 
+<div align = "center">
+  
 ## 💻 Tecnologias utilizadas
+
+
+
+</div>
+
+---
