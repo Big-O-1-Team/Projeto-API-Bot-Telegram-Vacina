@@ -7,3 +7,9 @@ def CriarCSV(tabela):
     display(df)
     return CSVFile
 
+def procuraInfoPCategoria(categoria):
+    with open("CategoriaInformacoes.csv", 'r') as arquivo:
+        CSVFile= pd.read_csv(arquivo)
+        infoFiltrada = CSVFile[CSVFile['Categoria'] == categoria]
+
+    return infoFiltrada['Vacina/Info'].values.tolist()

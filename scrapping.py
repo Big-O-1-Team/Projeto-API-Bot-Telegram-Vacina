@@ -72,4 +72,3 @@ def extrairDadosVacinacao(url):     #Extrai os dados de vacinação da página d
             dados.append((categoria, texto))
     return dados
 
-
