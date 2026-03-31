@@ -16,8 +16,8 @@
 | Desenvolvedor | Lucas Eduardo Rodrigues de Almeida |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Luckode554) |
 | Desenvolvedor | Lucas Uchôas Morais Belarmino |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/lucasuchoasb-hash) |
 
-</div>
 ---
+</div>
 
 ## 💻 Tecnologias utilizadas
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
