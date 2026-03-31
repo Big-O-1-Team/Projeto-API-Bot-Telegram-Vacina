@@ -2,6 +2,7 @@
 ## EQUIPE BIG O
 
 <div align = "center">
+
   ## 🎓 Equipe
 | Função | Nome | LinkedIn | GitHub |
 |:--------:|:------:|:----------:|:--------:|
