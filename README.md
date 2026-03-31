@@ -21,7 +21,7 @@
 
 ## 💻 Tecnologias utilizadas
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-
-
-
+![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
+![Telegram](https://user-images.githubusercontent.com/49933115/139837223-bf23d3a9-4638-4e17-994a-ac8678d5f517.png)
+![GitHub]((https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)
 ---
