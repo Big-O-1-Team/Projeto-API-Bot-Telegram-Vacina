@@ -1,5 +1,5 @@
 # API 1° SEMESTRE ADS
-# BIG O - BOT OSWALDO
+## EQUIPE Big O
 
 
 ## 🎓 Equipe 
