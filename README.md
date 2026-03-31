@@ -1,7 +1,7 @@
 # API 1° SEMESTRE ADS
 ## EQUIPE BIG O
 
-
+<div align = "center">
 ## 🎓 Equipe 
 | Função | Nome | LinkedIn | GitHub |
 |:--------:|:------:|:----------:|:--------:|
@@ -14,7 +14,7 @@
 | Desenvolvedor | João Paulo Monteiro Ribas da Silva |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/monteirojdev-bit) |
 | Desenvolvedor | Lucas Eduardo Rodrigues de Almeida |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Luckode554) |
 | Desenvolvedor | Lucas Uchôas Morais Belarmino |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/lucasuchoasb-hash) |
-
+</div>
 ---
 
 ## 💻 Tecnologias utilizadas
