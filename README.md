@@ -1,5 +1,5 @@
 # API 1° SEMESTRE ADS
-## EQUIPE Big O
+## EQUIPE BIG O
 
 
 ## 🎓 Equipe 
