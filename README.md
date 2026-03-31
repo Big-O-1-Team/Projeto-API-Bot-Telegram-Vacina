@@ -4,10 +4,10 @@
 |--------|------|----------|--------|
 | Scrum Master | Lennon Vinicius de Moraes Soares |  |  |
 | Product Owner | Enzo Ramos de Almeida |  |  |
-| Desenvolvimento | Daniel Fulaneto Batista |  |  |
-| Desenvolvimento | Erik Dias Santana |  |  |
-| Desenvolvimento | Felipe Dobri Camargo |  |  |
-| Desenvolvimento | Gustavo Akira Leite Minami |  |  |
-| Desenvolvimento | João Paulo Monteiro Ribas da Silva |  |  |
-| Desenvolvimento | Lucas Eduardo Rodrigues de Almeida |  |  |
-| Desenvolvimento | Lucas Uchôas Morais Belarmino |  |  |
+| Desenvolvedor | Daniel Fulaneto Batista |  |  |
+| Desenvolvedor | Erik Dias Santana |  |  |
+| Desenvolvedor | Felipe Dobri Camargo |  |  |
+| Desenvolvedor | Gustavo Akira Leite Minami |  |  |
+| Desenvolvedor | João Paulo Monteiro Ribas da Silva |  |  |
+| Desenvolvedor | Lucas Eduardo Rodrigues de Almeida |  |  |
+| Desenvolvedor | Lucas Uchôas Morais Belarmino |  |  |
