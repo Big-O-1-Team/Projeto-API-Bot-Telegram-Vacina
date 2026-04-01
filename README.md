@@ -1,13 +1,15 @@
 # API 1° SEMESTRE ADS
 ## EQUIPE BIG O
 
-#Índice
+# Índice
+
 <p align="center">
   | <a href ="#equipe"> Equipe</a>  |
   <a href ="#tec"> Tecnologias utilizadas</a>  |   
   <a href ="#backlog"> Product Backlog</a>  |
 </p>
 
+---
 <div align = "center">
 
 # Equipe🎓 <a id="equipe"></a>
