@@ -1,8 +1,6 @@
 # API 1° SEMESTRE ADS
 ## EQUIPE BIG O
 
-# Índice
-
 <p align="center">
   | <a href ="#equipe"> Equipe</a>  |
   <a href ="#tec"> Tecnologias utilizadas</a>  |   
