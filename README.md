@@ -2,6 +2,9 @@
 ## EQUIPE BIG O
 
 <p align="center">
+<img src="docs/img/download.jpg" alt="logoTeste" width="200">
+
+<p align="center">
   | <a href ="#equipe"> Equipe</a>  |
   <a href ="#tec"> Tecnologias utilizadas</a>  |   
   <a href ="#backlog"> Product Backlog</a>  |
