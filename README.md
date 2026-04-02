@@ -5,17 +5,19 @@
   | <a href ="#equipe"> Equipe</a>  |
   <a href ="#tec"> Tecnologias utilizadas</a>  |   
   <a href ="#backlog"> Product Backlog</a>  |
+  <a href ="#desafio"> Desafio</a>  |
+  <a href ="#solução"> Solução</a>  |
 </p>
 
 
-## Desafio🏅
+## Desafio🏅 <a id="desafio"></a>
 Desenvolver um assistente virtual capaz de utilizar dados de portais públicos oficiais de saúde sobre vacinação, com o objetivo de informar o cidadão sobre:
 Calendário de vacinação para diferentes faixas etárias (crianças, adolescentes/jovens, adultos e idosos).
 Coberturas vacinais em diferentes regiões brasileiras.
 Informações gerais sobre vacinas disponíveis.
 O assistente deverá interagir com o usuário utilizando o Telegram.
 
-## Solução🏅
+## Solução🏅 <a id="solução"></a>
 A solução consiste no desenvolvimento de um assistente virtual (Bot) integrado ao Telegram, capaz de coletar, processar e fornecer informações sobre vacinação no Brasil a partir de dados públicos oficiais. O sistema será desenvolvido em Python e funcionará por meio de web scraping em portais oficiais de saúde, como o site do Ministério da Saúde e plataformas de dados públicos. Os dados coletados serão organizados e armazenados em arquivos CSV permitindo consultas rápidas e organizadas.
 
 
