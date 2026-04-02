@@ -44,9 +44,9 @@ O bot funcionará da seguinte forma:
 # Equipe🎓 <a id="equipe"></a>
 | Função | Nome | LinkedIn | GitHub |
 |:--------:|:------:|:----------:|:--------:|
-| Scrum Master | Lennon Vinicius de Moraes Soares |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/LennonVinicius) |
-| Product Owner | Enzo Ramos de Almeida |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/ExKN1) |
-| Desenvolvedor | Erik Dias Santana |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/erikbtw) |
+| Scrum Master | Lennon Vinicius de Moraes Soares | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lennon-vinicius-de-moraes-soares-0544a0276/) | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/LennonVinicius) |
+| Product Owner | Enzo Ramos de Almeida | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/enzo-ramos-de-almeida-90085a364/) | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/ExKN1) |
+| Desenvolvedor | Erik Dias Santana | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/erik-dias-936bb0292?utm_source=share_via&utm_content=profile&utm_medium=member_ios) | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/erikbtw) |
 | Desenvolvedor | Felipe Dobri Camargo |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/felipedobri) |
 | Desenvolvedor | Gustavo Akira Leite Minami |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)]() |
 | Desenvolvedor | João Paulo Monteiro Ribas da Silva |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/monteirojdev-bit) |
@@ -93,3 +93,11 @@ O bot funcionará da seguinte forma:
 * A funcionalidade está funcionando
 * O código foi enviado para o GitHub
 * A documentação foi atualizada
+
+## Cronograma de Sprints
+
+| Sprint          |    Período    | Documentação                                     |
+| --------------- | :-----------: | ------------------------------------------------ |
+| 🔖 **SPRINT 1** |  | [Sprint 1 Docs] |
+| 🔖 **SPRINT 2** |  | [Sprint 2 Docs] |
+| 🔖 **SPRINT 3** |  | [Sprint 3 Docs] |
