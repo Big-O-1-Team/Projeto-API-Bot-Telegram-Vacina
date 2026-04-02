@@ -50,7 +50,7 @@ O bot funcionará da seguinte forma:
 | Desenvolvedor | Felipe Dobri Camargo |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/felipedobri) |
 | Desenvolvedor | Gustavo Akira Leite Minami |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)]() |
 | Desenvolvedor | João Paulo Monteiro Ribas da Silva |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/monteirojdev-bit) |
-| Desenvolvedor | Lucas Eduardo Rodrigues de Almeida |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Luckode554) |
+| Desenvolvedor | Lucas Eduardo Rodrigues de Almeida | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lucas-almeida-6ba3a7254?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app) | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Luckode554) |
 | Desenvolvedor | Lucas Uchôas Morais Belarmino | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lucas-uchôas-bb2694400?utm_source=share_via&utm_content=profile&utm_medium=member_android) | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/lucasuchoasb-hash) |
 
 ---
