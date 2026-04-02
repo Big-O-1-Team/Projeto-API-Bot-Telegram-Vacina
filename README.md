@@ -1,8 +1,8 @@
 # API 1° SEMESTRE ADS
-## EQUIPE BIG O
 
 <p align="center">
-<img src="docs/img/download.jpg" alt="logoTeste" width="200">
+  <img src="docs/img/LogoGrupo.jpeg" alt="logoGrupo" width="200">
+  <h2 align="center"> Equipe Big O</h2>
 
 <p align="center">
   | <a href ="#equipe"> Equipe</a>  |
@@ -22,9 +22,15 @@ O assistente deverá interagir com o usuário utilizando o Telegram.
 
 ## Solução🏅 <a id="solução"></a>
 A solução consiste no desenvolvimento de um assistente virtual (Bot) integrado ao Telegram, capaz de coletar, processar e fornecer informações sobre vacinação no Brasil a partir de dados públicos oficiais. O sistema será desenvolvido em Python e funcionará por meio de web scraping em portais oficiais de saúde, como o site do Ministério da Saúde e plataformas de dados públicos. Os dados coletados serão organizados e armazenados em arquivos CSV permitindo consultas rápidas e organizadas.
-## Oswaldo Health <a id="solução"></a>
-<p>bota foto do Oswaldo aqui</p>
-<p>Coloca um texto tipo: Oi eu sou o Oswaldo! Sou seu assistente pessoal de saúde, como posso te ajudar?</p>
+  
+  # Oswaldo Health <a id="solução"></a>
+
+<p align="center">
+  <img src="docs/img/Oswaldobot.jpeg" alt="Logo Oswaldo" width="200">
+
+<p align="center"
+  >Oi eu sou o Oswaldo! Sou seu assistente pessoal de saúde, como posso te ajudar?</p>
+
 
 O bot funcionará da seguinte forma:
 <ul>
