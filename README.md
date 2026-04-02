@@ -26,7 +26,7 @@ A solução consiste no desenvolvimento de um assistente virtual (Bot) integrado
   # Oswaldo Health <a id="solução"></a>
 
 <p align="center">
-  <img src="docs/img/Oswaldobot.jpeg" alt="Logo Oswaldo" width="200">
+  <img src="docs/img/FotoBotAssitentePerfil (1).jpg.jpeg" alt="Logo Oswaldo" width="200">
 
 <p align="center"
   >Oi eu sou o Oswaldo! Sou seu assistente pessoal de saúde, como posso te ajudar?</p>
@@ -106,6 +106,6 @@ O bot funcionará da seguinte forma:
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
-| 🔖 **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs] |
+| 🔖 **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs] (./docs/processo/sprints/sprints-1/README.md) |
 | 🔖 **SPRINT 2** | 13/04 - 03/05 | [Sprint 2 Docs] |
 | 🔖 **SPRINT 3** | 11/05 - 31/05 | [Sprint 3 Docs] |
