@@ -76,3 +76,20 @@ O bot funcionará da seguinte forma:
 |   6   |   Média  | Como usuário gostaria de ser alertado sobre a minha próxima vacina                                                           |  A fazer   | Sprint 2
 |   7   |   Baixa  | Como deficiente visual desejo ter ferramentas para o acesso as informações do assistente virtual                             |  A fazer   | Sprint 3
 |   8   |   Baixa  | Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar no país                                        | A fazer    | Sprint 3
+</div>
+
+## DoR - Definition of Ready
+
+* O objetivo da tarefa está definido
+* A fonte de dados está definida
+* A entrada e a saída da tarefa estão definidas
+* Não há impedimentos para começar
+
+## DoD - Definition of Done
+
+* O código foi implementado
+* O código foi testado
+* Os dados foram coletados corretamente
+* A funcionalidade está funcionando
+* O código foi enviado para o GitHub
+* A documentação foi atualizada
