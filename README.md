@@ -8,14 +8,14 @@
 </p>
 
 
-## Desafio
+## Desafio🏅
 Desenvolver um assistente virtual capaz de utilizar dados de portais públicos oficiais de saúde sobre vacinação, com o objetivo de informar o cidadão sobre:
 Calendário de vacinação para diferentes faixas etárias (crianças, adolescentes/jovens, adultos e idosos).
 Coberturas vacinais em diferentes regiões brasileiras.
 Informações gerais sobre vacinas disponíveis.
 O assistente deverá interagir com o usuário utilizando o Telegram.
 
-## Solução
+## Solução🏅
 A solução consiste no desenvolvimento de um assistente virtual (Bot) integrado ao Telegram, capaz de coletar, processar e fornecer informações sobre vacinação no Brasil a partir de dados públicos oficiais. O sistema será desenvolvido em Python e funcionará por meio de web scraping em portais oficiais de saúde, como o site do Ministério da Saúde e plataformas de dados públicos. Os dados coletados serão organizados e armazenados em arquivos CSV permitindo consultas rápidas e organizadas.
 
 
@@ -41,7 +41,6 @@ O bot funcionará da seguinte forma:
 |:--------:|:------:|:----------:|:--------:|
 | Scrum Master | Lennon Vinicius de Moraes Soares |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/LennonVinicius) |
 | Product Owner | Enzo Ramos de Almeida |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/ExKN1) |
-| Desenvolvedor | Daniel Fulaneto Batista |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)]() |
 | Desenvolvedor | Erik Dias Santana |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/erikbtw) |
 | Desenvolvedor | Felipe Dobri Camargo |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/felipedobri) |
 | Desenvolvedor | Gustavo Akira Leite Minami |  | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)]() |
@@ -61,7 +60,7 @@ O bot funcionará da seguinte forma:
 
 <div align="center">
 
-# Product Backlog <a id="backlog"></a>
+# Product Backlog📋 <a id="backlog"></a>
 |Rank|Prioridade|User Story|Estimativa|Sprint
 | ----- |----------| ---------------------------------------------------------------------------------------------------------------------------- | ---------- | -----------
 |   1   |   Alta   | Como cidadão desejo um canal de comunicação de uso diário e simples para saber informações sobre meu calendário de vacinação |  A fazer   | Sprint 3
