@@ -100,6 +100,6 @@ O bot funcionará da seguinte forma:
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
-| 🔖 **SPRINT 1** |  | [Sprint 1 Docs] |
-| 🔖 **SPRINT 2** |  | [Sprint 2 Docs] |
-| 🔖 **SPRINT 3** |  | [Sprint 3 Docs] |
+| 🔖 **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs] |
+| 🔖 **SPRINT 2** | 13/04 - 03/05 | [Sprint 2 Docs] |
+| 🔖 **SPRINT 3** | 11/05 - 31/05 | [Sprint 3 Docs] |
