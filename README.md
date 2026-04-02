@@ -10,6 +10,9 @@
   <a href ="#backlog"> Product Backlog</a>  |
   <a href ="#desafio"> Desafio</a>  |
   <a href ="#solução"> Solução</a>  |
+  <a href ="#dor">DoR</a>  |
+  <a href ="#dod">DoD</a>  |
+  <a href ="#sprint"> Cronograma de Sprints</a>  |
 </p>
 
 
@@ -23,10 +26,10 @@ O assistente deverá interagir com o usuário utilizando o Telegram.
 ## Solução🏅 <a id="solução"></a>
 A solução consiste no desenvolvimento de um assistente virtual (Bot) integrado ao Telegram, capaz de coletar, processar e fornecer informações sobre vacinação no Brasil a partir de dados públicos oficiais. O sistema será desenvolvido em Python e funcionará por meio de web scraping em portais oficiais de saúde, como o site do Ministério da Saúde e plataformas de dados públicos. Os dados coletados serão organizados e armazenados em arquivos CSV permitindo consultas rápidas e organizadas.
   
-  # Oswaldo Health <a id="solução"></a>
+  # Oswaldo Health
 
 <p align="center">
-  <img src="docs/img/FotoBotAssitentePerfil (1).jpg.jpeg" alt="Logo Oswaldo" width="200">
+  <img src="docs/img/FotoPerfilOswaldoHealth.png" alt="Logo Oswaldo" width="200">
 
 <p align="center"
   >Oi eu sou o Oswaldo! Sou seu assistente pessoal de saúde, como posso te ajudar?</p>
@@ -86,14 +89,14 @@ O bot funcionará da seguinte forma:
 |   8   |   Baixa  | Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar no país                                        | A fazer    | Sprint 3
 </div>
 
-## DoR - Definition of Ready
+## DoR - Definition of Ready <a id="dor"></a>
 
 * O objetivo da tarefa está definido
 * A fonte de dados está definida
 * A entrada e a saída da tarefa estão definidas
 * Não há impedimentos para começar
 
-## DoD - Definition of Done
+## DoD - Definition of Done <a id="dod"></a>
 
 * O código foi implementado
 * O código foi testado
@@ -102,10 +105,10 @@ O bot funcionará da seguinte forma:
 * O código foi enviado para o GitHub
 * A documentação foi atualizada
 
-## Cronograma de Sprints
+## Cronograma de Sprints <a id="sprint"></a>
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
-| 🔖 **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs] (./docs/processo/sprints/sprints-1/README.md) |
-| 🔖 **SPRINT 2** | 13/04 - 03/05 | [Sprint 2 Docs] |
-| 🔖 **SPRINT 3** | 11/05 - 31/05 | [Sprint 3 Docs] |
+|  **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs] (./docs/processo/sprints/sprint-1/README.md) |
+|  **SPRINT 2** | 13/04 - 03/05 | [Sprint 2 Docs] |
+|  **SPRINT 3** | 11/05 - 31/05 | [Sprint 3 Docs] |
