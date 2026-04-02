@@ -109,6 +109,6 @@ O bot funcionará da seguinte forma:
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
-|  **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs] (./docs/processo/sprints/sprint-1/README.md) |
+|  **SPRINT 1** | 11/03 - 10/04 | [Sprint 1 Docs](docs/processo/sprints/sprint-1) |
 |  **SPRINT 2** | 13/04 - 03/05 | [Sprint 2 Docs] |
 |  **SPRINT 3** | 11/05 - 31/05 | [Sprint 3 Docs] |
