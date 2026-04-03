@@ -62,7 +62,7 @@ O bot funcionará da seguinte forma:
 | Rank  | Prioridade |                                                        User Story                                                            | Estimativa | Sprint
 | ----- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------- | -----------
 |   1   |   Alta   | Como cidadão desejo um canal de comunicação de uso diário e simples para saber informações sobre meu calendário de vacinação   |  A fazer   | Sprint 3
-|   2   |   Alta   | Como usuário desejo saber informações detalhadas das vacinas e para que elas servem                                            |  A fazer   | Sprint  1
+|   2   |   Alta   | Como usuário desejo saber informações das vacinas e para que elas servem                                                       |  A fazer   | Sprint  1
 |   3   |   Alta   | Como cidadão quais vacinas estão disponíveis gratuitamente hoje nos postos de saúde                                            |  A fazer   | Sprint  1
 |   4   |   Alta   | Como usuário desejo saber qual será a minha próxima vacina a ser tomada                                                        |  A fazer   | Sprint  1
 |   5   |   Média  | Como usuário desejo saber a cobertura de vacinação para o local em que eu resido                                               |  A fazer   | Sprint 2
