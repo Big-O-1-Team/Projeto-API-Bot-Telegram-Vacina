@@ -99,8 +99,12 @@ pip install requests
 pip install ipython
 ```
 
-# Configure o seu Token do Telegram no arquivo .env ou config.py
-# Execute o bot
+### Configure o seu Token do Telegram no arquivo .env ou config.py
+Crie um arquivo .env dentro da pasta main e insira a chave token do Telegram
+
+BOT_TOKEN = 'Sua chave'
+
+### Execute o bot
 python main.py
 
 ## 💻 Tecnologias utilizadas <a id="tec"></a>
