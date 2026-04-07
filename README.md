@@ -55,12 +55,14 @@ O bot funcionará da seguinte forma:
 <li>Informações sobre campanhas e vacinas disponíveis.</li>
 </ul>
 
-##Manual de instalação
+## Manual de instalação
 ### 🛠 Pré-requisitos
 
-- Git ([Download](https://git-scm.com/downloads))
-
-- Python 3.9+ ([Download](https://www.python.org/downloads/))
+<ul>
+<li> Git ([Download](https://git-scm.com/downloads))</li>
+<li>Python 3.9+ ([Download](https://www.python.org/downloads/))</li>
+<ul>
+  
 - Telebot
 - Pandas
 - CSV
