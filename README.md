@@ -15,8 +15,10 @@
   <a href ="#sprint"> Cronograma de Sprints</a>  |
 </p>
 <ul>
-  <li href='https://www.youtube.com/watch?v=Q80purAx_8c'>Video do funcionamento🎥</li>  
-<\ul>
+  <li>
+    <a href='https://www.youtube.com/watch?v=Q80purAx_8c'>Video do funcionamento🎥</a>
+  </li>  
+</ul>
 
 
 
