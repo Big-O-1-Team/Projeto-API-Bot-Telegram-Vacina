@@ -59,9 +59,9 @@ O bot funcionará da seguinte forma:
 ### 🛠 Pré-requisitos
 
 <ul>
-<li> Git ([Download](https://git-scm.com/downloads))</li>
-<li>Python 3.9+ ([Download](https://www.python.org/downloads/))</li>
-<ul>
+  <li>Git (<a href="https://git-scm.com/downloads">Download</a>)</li>
+  <li>Python 3.9+ (<a href="https://www.python.org/downloads/">Download</a>)</li>
+</ul>
   
 - Telebot
 - Pandas
