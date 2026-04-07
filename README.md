@@ -79,16 +79,25 @@ O bot funcionará da seguinte forma:
 git clone https://github.com/Big-O-1-Team/Projeto-API-Bot-Telegram-Vacina
 ```
 
+### 1.1 Criação dotenv
+```bash
+python -m venv venv
+```
+
 ### 2. Entre na pasta
-cd main
+```bash
+cd Projeto-API-Bot-Telegram-Vacina
+```
 
 ### 3. Instale as dependências necessárias
+```bash
 pip install pyTelegramBotAPI
 pip install pandas
 pip install python-dotenv
 pip install beautifulsoup4
 pip install requests
 pip install ipython
+```
 
 # Configure o seu Token do Telegram no arquivo .env ou config.py
 # Execute o bot
