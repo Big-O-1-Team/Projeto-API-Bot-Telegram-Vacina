@@ -61,7 +61,7 @@ O bot funcionará da seguinte forma:
 <ul>
   <li>Git (<a href="https://git-scm.com/downloads">Download</a>)</li>
   <li>Python 3.9+ (<a href="https://www.python.org/downloads/">Download</a>)</li>
-</ul>
+<ul>
   
 - Telebot
 - Pandas
