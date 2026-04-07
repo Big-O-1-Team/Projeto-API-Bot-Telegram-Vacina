@@ -14,7 +14,10 @@
   <a href ="#dod">DoD</a>  |
   <a href ="#sprint"> Cronograma de Sprints</a>  |
 </p>
-<p href='https://www.youtube.com/watch?v=Q80purAx_8c'>Video do funcionamento🎥</p>
+<ul>
+  <li href='https://www.youtube.com/watch?v=Q80purAx_8c'>Video do funcionamento🎥</li>  
+<\ul>
+
 
 
 ## Desafio🏅 <a id="desafio"></a>
