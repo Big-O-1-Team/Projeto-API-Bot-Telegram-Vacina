@@ -1,5 +1,3 @@
-import scripts.scrapping as scrapping
-from scripts.scrapping import dominioGoverno, siteVacinacao
 import scripts.createCSV as createCSV
 import dotenv
 import os
@@ -7,15 +5,22 @@ import telebot
 from telebot import types
 from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from datetime import date, datetime
+import selenium
+from selenium import webdriver
+from scripts.scrappingselenium import AcessarInformacoes
 
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
 bot_token = os.getenv('BOT_TOKEN')
 
+
+
 # criar bot ligado com a chave
 bot = telebot.TeleBot(bot_token)
+#Variáveis Globais
 nomesVacina = []
+categoria = []
 
 # função para o bot receber algo e retornar algo
 @bot.message_handler(commands=['start'])
@@ -39,15 +44,30 @@ def receber(message):
 @bot.callback_query_handler(func=lambda call: True)
 def answer(callback):
     if callback.data == "answer_calendario_vacinal":
-        bot.send_message(callback.message.chat.id, "Digite a sua data de nascimento")
-        bot.register_next_step_handler(callback.message, idadePorCategoria)
-
+        gestanteMensagem(callback.message)
+        bot.answer_callback_query(callback.id)
     if callback.data == 'yes':
         reply_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
         for vacina in nomesVacina:
-            reply_keyboard.add(f"{vacina}",)
+            primeira_palavra = vacina.split()[0]
+            segunda_palavra = vacina.split()[1]
+            vacinaname = primeira_palavra + ' ' +segunda_palavra
+            reply_keyboard.add(f"{vacinaname}",)
         bot.send_message(callback.message.chat.id, "Escolha uma Opção abaixo.",reply_markup=reply_keyboard)
-        bot.answer_callback_query(callback.id)     
+        bot.answer_callback_query(callback.id)
+
+    if  callback.data == 'yesPregnant':
+        categoria.append('gestante')
+        bot.send_message(callback.message.chat.id, "Digite a sua data de nascimento")
+        bot.register_next_step_handler(callback.message, idadePorCategoria)
+        bot.answer_callback_query(callback.id)
+
+
+    if  callback.data == 'noPregnant':
+        bot.send_message(callback.message.chat.id, "Digite a sua data de nascimento")
+        bot.register_next_step_handler(callback.message, idadePorCategoria)
+        bot.answer_callback_query(callback.id)
+        
 
 def salvar_idade(idade):
     idadeAtual = []
@@ -76,27 +96,47 @@ def enviar_mensagem_longa(chat_id, texto):
         parte = texto[i:i + limite]
         bot.send_message(chat_id, parte)
 
+def gestanteMensagem(message):
+    markup3 = types.InlineKeyboardMarkup(row_width=3)
+    respostaSim = types.InlineKeyboardButton('Sim', callback_data= 'yesPregnant')
+    respostaNao = types.InlineKeyboardButton('Nao', callback_data= 'noPregnant')
+    markup3.add(respostaSim, respostaNao)
+    bot.send_message(message.chat.id,"Você é gestante?", reply_markup=markup3)
+
+
 def idadePorCategoria(message):
     idadeAtual = salvar_idade(message)
     idade = idadeAtual[1] + 12 * idadeAtual[0]
     if idade < 0:
-        categoria = 'Invalid'
+        bot.send_message(message.chat, "Categoria Inválida")
     if idade < 12 * 12:
-        categoria = 'criança'
-    if idade >= 12 * 12 and idade < 18 * 12:
-        categoria = 'adolescente'
-    if idade >= 18 * 12 and idade < 60 * 12:
-        categoria = 'adulto'
+        categoria.append('crianca')
+    elif idade < 18 * 12:
+        categoria.append('adolescente')
+    elif idade < 60 * 12:
+        categoria.append('adulto')
     else:
-        categoria = 'idoso'
-    listaCategoriaFiltrada = createCSV.procuraInfoPCategoria(categoria)
-    texto ='O paciente em questão pode tomar as seguintes vacinas: \n\n'
+        categoria.append('idoso')
 
-    for vacina in listaCategoriaFiltrada:
-        nomesVacina.append(vacina)
-        texto += vacina + '\n\n'
-    enviar_mensagem_longa(message.chat.id, texto)
+    for categorias in categoria:
+        listaCategoriaFiltrada = createCSV.procuraInfoPCategoria(categorias)
+        texto ='O paciente em questão pode tomar as seguintes vacinas: \n\n'
+        for periodo, vacina, doencas in listaCategoriaFiltrada:
+            nomesVacina.append(vacina)
+            texto_periodo = ' '.join(periodo.split())
+            if texto_periodo not in texto:
+                texto += texto_periodo + ':' + '\n'   
+            texto += '-' + vacina + '\n\n'
+
+        tamanho = len(nomesVacina)
+        if tamanho == 1:
+            ultimoTexto = f' {tamanho} vacina'
+        else:
+            ultimoTexto= f' {tamanho} vacinas'
+        texto = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
+        enviar_mensagem_longa(message.chat.id, texto)
     perguntaMenu2(message)
+        
 
 def perguntaMenu2(message):
     markup2 = types.InlineKeyboardMarkup(row_width=3)
@@ -106,26 +146,16 @@ def perguntaMenu2(message):
     bot.send_message(message.chat.id,"Gostaria de saber mais informações sobre alguma vacina?", reply_markup=markup2)
 
 
-
-
-
- 
-   
-
-
-
 def main():
     #Scrapping 
     print("Main pronta")
-    lista = scrapping.pegarLinksCalendario()
-    for link in lista:
-        print(link)
-    dados = scrapping.extrairDadosVacinacao(siteVacinacao)
+    dados = AcessarInformacoes()
+
     #Criação do Arquivo CSV
     createCSV.CriarCSV(dados)
     #Bot
+
     bot.polling()
-    
 
 if __name__=="__main__":
     main()
