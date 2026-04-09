@@ -7,8 +7,8 @@ from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from datetime import date, datetime
 import selenium
 from selenium import webdriver
-from scripts.scrappingselenium import AcessarInformacoes
-
+from scripts.scrappingselenium import AcessarInformacoes, scrappingVacinaInfoIndividual
+import re
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
@@ -49,11 +49,12 @@ def answer(callback):
     if callback.data == 'yes':
         reply_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
         for vacina in nomesVacina:
-            primeira_palavra = vacina.split()[0]
-            segunda_palavra = vacina.split()[1]
-            vacinaname = primeira_palavra + ' ' +segunda_palavra
+            vacinaname = re.sub(r"\(.*?\)", '', vacina).strip()
             reply_keyboard.add(f"{vacinaname}",)
         bot.send_message(callback.message.chat.id, "Escolha uma Opção abaixo.",reply_markup=reply_keyboard)
+
+        bot.register_next_step_handler(callback.message, terceiroMenu)
+
         bot.answer_callback_query(callback.id)
 
     if  callback.data == 'yesPregnant':
@@ -68,6 +69,9 @@ def answer(callback):
         bot.register_next_step_handler(callback.message, idadePorCategoria)
         bot.answer_callback_query(callback.id)
         
+def terceiroMenu(message):
+    texto = scrappingVacinaInfoIndividual(message.text)
+    enviar_mensagem_longa(message.chat.id, texto)
 
 def salvar_idade(idade):
     idadeAtual = []
