@@ -1,4 +1,6 @@
+from pathlib import Path
 from urlib.parse import quote_plus
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -13,6 +15,11 @@ def cria_driver(headless: bool = True) -> webdriver.Chrome:
   options.add_argument('--disable-gpu')
   options.add_argument('--no-sandbox')
   return webdriver.Chrome(options=options)
+
+def salvar_csv(resultados, arquivo='ubs_próximas.csv'):
+  df = pd.Dataframe(resultados)
+  df.to_csv(arquivo, index=False, encoding='utf-8-sig')
+  return arquivo
 
 def busca_no_maps(local: str) ->dict:
   query = f'postos de vacinação em {local}'.strip()
