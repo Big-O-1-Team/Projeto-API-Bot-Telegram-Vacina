@@ -21,33 +21,42 @@ def salvar_csv(resultados, arquivo='ubs_próximas.csv'):
   df.to_csv(arquivo, index=False, encoding='utf-8-sig')
   return arquivo
 
-def busca_no_maps(local: str) ->dict:
-  query = f'postos de vacinação em {local}'.strip()
-  url = f'https://www.google.com/maps/search/{quote_plus(query)}'
-  driver = cria_driver(headless=True)
-  wait = WebDriverWait(driver, 15)
-  try:
-      driver.get(url)
-      wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
-      titulo = ''
-      endereco = ''
-      try:
-          titulo = wait.until(
-              EC.presence_of_element_located((By.CSS_SELECTOR, 'h1'))
-          ).text.strip()
-      except Exception:
-          pass
-      try:
-          endereco = driver.find_element(
-              By.CSS_SELECTOR, 'button[data-item-id='address']'
-          ).text.strip()
-      except Exception:
-        pass
-      return {
-          'query': query,
-          'titulo': titulo,
-          'endereco': endereco,
-          'url': driver.current_url,
-      }
+def busca_no_maps(local: str, limite: int = 5):
+    query = f'UBS perto de {local}'.strip()
+    url = f'https://www.google.com/maps/search/{quote_plus(query)}'
+    driver = cria_driver(headless=True)
+    wait = WebDriverWait(driver, 15)
+    resultados = []
+    try:
+        driver.get(url)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+        cards = driver.find_elements(By.CSS_SELECTOR, "div[role='article']")
+        for card in cards[:limite]:
+            nome = ''
+            endereco = ''
+            try:
+                nome = card.find_element(By.CSS_SELECTOR, 'h3').text.strip()
+            except Exception:
+                pass
+            try:
+                endereco = card.text.strip()
+            except Exception:
+                pass
+            if nome or endereco:
+                resultados.append({
+                    'consulta': query,
+                    'nome': nome,
+                    'endereco': endereco,
+                    'url': driver.current_url,
+                })
+        if not resultados:
+            resultados.append({
+                'consulta': query,
+                'nome': '',
+                'endereco': '',
+                'url': driver.current_url,
+            })]
+        salvar_csv(resultados)
+        return resultados
   finally:
       driver.quit()
