@@ -12,7 +12,7 @@ def cria_driver(headless: bool = True) -> webdriver.Chrome:
   options.add_argument('--window-size=1366, 900')
   options.add_argument('--disable-gpu')
   options.add_argument('--no-sandbox')
-  return webdriver.Chrome(Options=options)
+  return webdriver.Chrome(options=options)
 
 def busca_no_maps(local: str) ->dict:
   query = f'postos de vacinação em {local}'.strip()
