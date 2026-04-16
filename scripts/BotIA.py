@@ -20,3 +20,23 @@ def verificarModeloOllama(modelo):
     else:
         return print(f'Modelo já baixado: {modelo}')
 
+
+def chatIA(message, modelo):       
+    resposta: ollama.ChatResponse = ollama.chat(
+        model=modelo,
+        messages=[
+            {'role': 'system', 'content': '''
+                Você é o Oswaldo, um bot do telegram e um assistente virtual simpático capaz 
+                de utilizar dados de portais públicos oficiais de saúde sobre vacinação, 
+                com o objetivo de informar o cidadão sobre: Calendário de vacinação para 
+                diferentes faixas etárias (crianças, adolescentes/jovens, adultos e idosos). 
+                Coberturas vacinais em diferentes regiões brasileiras. Informações gerais 
+                sobre vacinas disponíveis. Você irá interagir com o usuário 
+                utilizando o Telegram. Responda de forma curta, apenas á perguntas sobre vacinas, e apenas
+                informações brasileiras. Responda apenas em Português brasileiro.
+                IMPORTANTE: Não responda a esta mensagem de forma alguma.'''},
+                {'role': 'user', 'content': message.text},   
+                ],
+    )
+    texto = re.sub(r"<unused\d+>.*?<unused\d+>", "", resposta.message.content, flags=re.DOTALL)
+    return texto
