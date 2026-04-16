@@ -14,3 +14,8 @@ def procuraInfoPCategoria(categoria):
         infoFiltrada.columns = infoFiltrada.columns.str.strip()
 
     return infoFiltrada[['periodo', 'Vacina', 'Doencas Evitadas']].values.tolist()
+
+def salvar_csv_ubs(resultados, arquivo='ubs_próximas.csv'):
+    df = pd.DataFrame(resultados)
+    df.to_csv(arquivo, index=False, encoding='utf-8-sig')
+    return arquivo
