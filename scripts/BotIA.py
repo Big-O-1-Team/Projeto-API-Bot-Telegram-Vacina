@@ -1,4 +1,5 @@
 import ollama
+import re
 
 # Verifica se o modelo escolhido está baixado na máquina.
 # modelo (string) = nome do modelo encontrado no site do ollama
@@ -18,3 +19,4 @@ def verificarModeloOllama(modelo):
         print(f'Modelo {modelo} baixado!')
     else:
         return print(f'Modelo já baixado: {modelo}')
+
