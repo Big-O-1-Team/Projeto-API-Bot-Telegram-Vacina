@@ -24,7 +24,7 @@ def verificarModeloOllama(modelo):
         return print(f'Modelo já baixado: {modelo}')
 
 def chatIA(message, modelo, historicoChatIA): 
-    global historicoChatIA    
+    historicoChatIA    
     resposta: ollama.ChatResponse = ollama.chat(
         model = modelo,
         messages = historicoChatIA + [{'role': 'user', 'content': message.text}],
