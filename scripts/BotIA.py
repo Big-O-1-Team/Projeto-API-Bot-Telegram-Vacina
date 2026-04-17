@@ -23,6 +23,10 @@ def verificarModeloOllama(modelo):
     else:
         return print(f'Modelo já baixado: {modelo}')
 
+# Conversa com o modelo
+# message (obj) = objeto de mensagem do telebot
+# modelo (string) = nome do modelo encontrado no site do ollama
+# historicoChatIA (lista) = historico de mensagens
 def chatIA(message, modelo, historicoChatIA): 
     historicoChatIA    
     resposta: ollama.ChatResponse = ollama.chat(
