@@ -30,7 +30,10 @@ def busca_no_maps(local: str, limite: int = 5):
     try:
         driver.get(url)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+        print('Página carregada')
         cards = driver.find_elements(By.CSS_SELECTOR, 'div[role="article"]')
+        print('busacando elementos...')
+        print('Qtd de resultados', len(cards))
         for card in cards:
             nome = ''
             endereco = ''
@@ -48,11 +51,11 @@ def busca_no_maps(local: str, limite: int = 5):
                 break
         if not resultados:
             resultados.append({'consulta': query, 'nome': 'Nenhuma UBS encontrada', 'endereco': '', 'url': driver.current_url})
-            salvar_csv(resultados, 'ubs_próximas.csv')
-            return resultados
     finally:
         driver.quit()
-            
+    salvar_csv(resultados, 'ubs_próximas.csv')
+    return resultados
+
 def formatar_resultados(resultados):
     texto = ''
     for i, item in enumerate(resultados, start=1):
@@ -60,3 +63,11 @@ def formatar_resultados(resultados):
         endereco = item.get('endereco', '').strip() or 'endereço não identificado'
         texto += f'{i}. {nome}\n{endereco}\n\n'
     return texto.strip()
+
+if __name__ == '__main__':
+    print('Testando scrapping.../n')
+    resultados = busca_no_maps('São José dos Campos SP', limite=5)
+    print('resultados brutos:')
+    print(resultados)
+    print('/n Resultados Formatados: /n')
+    print(formatar_resultados(resultados))
