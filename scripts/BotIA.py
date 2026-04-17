@@ -10,12 +10,16 @@ def verificarModeloOllama(modelo):
         print('Modelo Ollama não encontrado!')
         try:
             print(f'Baixando {modelo}...')
-            ollama.pull(modelo)
+            for progresso in ollama.pull(modelo, stream=True):
+                completo = progresso.get('completed')
+                total = progresso.get('total')
+                if completo is not None and total is not None and total > 0:
+                    print(f'\rProgresso: {completo/1073741824:.2f} GB / {total/1073741824:.2f} GB', end="", flush=True),
         except ollama.ResponseError as e:
             e = str(e)
             if '-1' in e:
                 raise ValueError(f'Modelo {modelo} não existe no Ollama!')
-            raise ValueError('Erro inesperado ao baixar modelo Ollama!\n', f'Erro: {e}')
+            raise ValueError('Erro inesperado ao baixar modelo Ollama!', f'Erro: {e}')
         print(f'Modelo {modelo} baixado!')
     else:
         return print(f'Modelo já baixado: {modelo}')
