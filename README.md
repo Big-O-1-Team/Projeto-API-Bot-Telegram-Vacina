@@ -60,6 +60,7 @@ O bot funcionará da seguinte forma:
 
 <ul>
   <li>Git (<a href="https://git-scm.com/downloads">Download</a>)</li>
+  <li>Ollama (<a href="https://ollama.com/download">Download</a>)</li>
   <li>Python 3.9+ (<a href="https://www.python.org/downloads/">Download</a>)</li>
 <ul>
   
@@ -72,6 +73,7 @@ O bot funcionará da seguinte forma:
 - os
 - bs4
 - requests
+- ollama
 
 ---
 ### 1. Clonar o repositório principal
