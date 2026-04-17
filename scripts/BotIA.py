@@ -13,7 +13,7 @@ def verificarModeloOllama(modelo):
             ollama.pull(modelo)
         except ollama.ResponseError as e:
             e = str(e)
-            if '500' in e:
+            if '-1' in e:
                 raise ValueError(f'Modelo {modelo} não existe no Ollama!')
             raise ValueError('Erro inesperado ao baixar modelo Ollama!\n', f'Erro: {e}')
         print(f'Modelo {modelo} baixado!')
