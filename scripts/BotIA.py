@@ -5,7 +5,7 @@ import re
 # modelo (string) = nome do modelo encontrado no site do ollama
 def verificarModeloOllama(modelo):
     print('Verificando se modelo Ollama está baixado...')
-    modelosBaixados = [m.model for m in ollama.list().models]
+    modelosBaixados = [m.model.lower() for m in ollama.list().models]
     if not modelo in modelosBaixados:
         print('Modelo Ollama não encontrado!')
         try:
