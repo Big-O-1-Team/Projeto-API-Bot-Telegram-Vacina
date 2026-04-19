@@ -10,6 +10,8 @@ import selenium
 from selenium import webdriver
 from scripts.scrappingselenium import AcessarInformacoes, scrappingVacinaInfoIndividual
 import re
+import scripts.BotIA as IA
+import Ollama
 
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
