@@ -10,6 +10,8 @@ import selenium
 from selenium import webdriver
 from scripts.scrappingselenium import AcessarInformacoes, scrappingVacinaInfoIndividual
 import re
+import scripts.BotIA as IA
+import ollama
 
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
@@ -237,6 +239,9 @@ def perguntaMenu2(message, ultima_mensagem_id):
     )'''
 
 def main():
+    #IA
+    IA.verificarModeloOllama(modelo)
+    
     # Scrapping
     print("Main pronta")
     dados = AcessarInformacoes()
