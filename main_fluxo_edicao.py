@@ -218,6 +218,9 @@ def perguntaMenu2(message, ultima_mensagem_id):
     )
 
 def main():
+    #IA
+    IA.verificarModeloOllama(modelo)
+    
     # Scrapping
     print("Main pronta")
     dados = AcessarInformacoes()
