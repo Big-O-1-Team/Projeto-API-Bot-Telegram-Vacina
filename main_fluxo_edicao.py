@@ -86,6 +86,27 @@ def answer(callback):
 
         perg_nascimento(callback.message, from_callback = True)
 
+    if callback.data == 'avançar':
+        s = get_sessao(callback.message.chat.id)
+        markup2 = types.InlineKeyboardMarkup(row_width=2)
+        respAvançar = types.InlineKeyboardButton('⬅️', callback_data='avançar')
+        respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
+        markup2.add(respIA, respAvançar)
+
+        '''bot.edit_message_text(
+            chat_id=callback.message.chat.id,
+            message_id=s['ultima_mensagem'],
+            text="",
+            reply_markup=markup2
+        )'''
+        
+    if callback.data == 'ia':
+        s = get_sessao(callback.message.chat.id)
+        bot.edit_message_text(
+            chat_id=callback.message.chat.id,
+            message_id=s['ultima_mensagem'],
+            text='Olá! Estou pronto para receber suas dúvidas.'
+        )        
 '''def terceiroMenu(message):
     texto = scrappingVacinaInfoIndividual(message.text)
     enviar_mensagem_longa(message.chat.id, texto)'''
@@ -208,12 +229,12 @@ def perguntaMenu2(message, ultima_mensagem_id):
     respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
     markup2.add(respIA, respAvançar)
 
-    bot.edit_message_text(
+    '''bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=ultima_mensagem_id,
         text="",
         reply_markup=markup2
-    )
+    )'''
 
 def main():
     # Scrapping
