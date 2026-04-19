@@ -65,7 +65,7 @@ def answer(callback):
         gestanteMensagem(callback.message)
 
     #Aqui que entra o código para integrar IA (*confirmar)
-    if callback.data == 'yes':
+    '''if callback.data == 'yes':
         reply_keyboard = ReplyKeyboardMarkup(
             resize_keyboard=True, one_time_keyboard=False)
         for vacina in s['nomesVacinas']:
@@ -75,7 +75,7 @@ def answer(callback):
         bot.send_message(callback.message.chat.id,
                          "Escolha uma Opção abaixo.", reply_markup=reply_keyboard)
 
-        bot.register_next_step_handler(callback.message, terceiroMenu)
+        bot.register_next_step_handler(callback.message, terceiroMenu)'''
 
     if callback.data == 'yesPregnant':
         s['categoria'].append('gestante')
@@ -86,9 +86,9 @@ def answer(callback):
 
         perg_nascimento(callback.message, from_callback = True)
 
-def terceiroMenu(message):
+'''def terceiroMenu(message):
     texto = scrappingVacinaInfoIndividual(message.text)
-    enviar_mensagem_longa(message.chat.id, texto)
+    enviar_mensagem_longa(message.chat.id, texto)'''
 
 def salvar_idade(idade):
     idadeAtual = []
@@ -201,17 +201,17 @@ def idadePorCategoria(message):
         enviar_mensagem_longa(message.chat.id, texto)
     perguntaMenu2(message, s['ultima_mensagem'])
 
-#não está funcionando (não sei o motivo)
+
 def perguntaMenu2(message, ultima_mensagem_id):
-    markup2 = types.InlineKeyboardMarkup(row_width=3)
-    respostaSim = types.InlineKeyboardButton('Sim', callback_data='yes')
-    respostaNao = types.InlineKeyboardButton('Nao', callback_data='no')
-    markup2.add(respostaSim, respostaNao)
+    markup2 = types.InlineKeyboardMarkup(row_width=2)
+    respAvançar = types.InlineKeyboardButton('➡️', callback_data='avançar')
+    respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
+    markup2.add(respIA, respAvançar)
 
     bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=ultima_mensagem_id,
-        text="Gostaria de saber mais informações?",
+        text="",
         reply_markup=markup2
     )
 
