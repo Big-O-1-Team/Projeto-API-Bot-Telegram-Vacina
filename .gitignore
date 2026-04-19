@@ -3,4 +3,8 @@ scripts/__pycache__/BotIA.cpython-314.pyc
 scripts/__pycache__/createCSV.cpython-314.pyc
 scripts/__pycache__/scrappingselenium.cpython-314.pyc
 
+#.csv com informações vacinais
+CategoriaInformacoes.csv
+
 .env
+
