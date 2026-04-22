@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 import time
 import pandas as pd
 from IPython.display import display
@@ -26,20 +28,25 @@ def getLinkCountry(name):
 
 listCountries()
 
-link = getLinkCountry('Barbados')
-nav.get(link)
-tabela_de_infos = nav.find_element(By.XPATH, '//*[@id="dest-vm-a"]')
-elementos1 = tabela_de_infos.find_elements(By.TAG_NAME, 'clinician-disease')
-elementos2 = tabela_de_infos.find_elements(By.TAG_NAME, 'clinician-recomendations')
-elementos3 = tabela_de_infos.find_elements(By.TAG_NAME, 'clinician-guidance')
-tabela = []
-tabela.append(elementos1, elementos2, elementos3)
-def CriarCSVCountry(tabela):
-    df = pd.DataFrame(tabela, columns=["Vaccines for disease","Recommendations", "Clinical Guidance for Healthcare providers", ])
-    CSVFile = df.to_csv("CountryRequirements.csv", index=False)
+
+def InfoAcessPCountry(country):
+    link = getLinkCountry(country)
+    link_traduzido = f"https://translate.google.com/translate?sl=auto&tl=pt&u={link}"
+    nav.get(link_traduzido)
+    time.sleep(20)
+    tabela = nav.find_element(By.XPATH, "//*[@id='dest-vm-a']")
+    vaccines_for_disease_tb = tabela.find_elements(By.CLASS_NAME, 'clinician-disease')
+    recomendantions_tb = tabela.find_elements(By.CLASS_NAME, 'clinician-recomendations')
+    guidance_tb = tabela.find_elements(By.CLASS_NAME, 'clinician-guidance')
+
+    vaccine_txt =[x.text for x in vaccines_for_disease_tb]
+    recomendations_txt =[x.text for x in recomendantions_tb]
+    guidance_txt = [x.text for x in guidance_tb]
+    final_table = {"Vacina": vaccine_txt, "Recomendação": recomendations_txt,"Guidance": guidance_txt}
+
+    df = pd.DataFrame(final_table)
+    csvFile = df.to_csv("CountryInfo.csv", index= False)
     display(df)
-    return CSVFile
-CriarCSVCountry(tabela)
 
 
- 
+
