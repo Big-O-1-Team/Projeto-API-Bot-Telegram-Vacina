@@ -22,9 +22,10 @@ bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
 
 # Variáveis Globais
+"""
 modelo = 'gemma3n:e2b'
 sessao = {
-    historicoChatIA:  [
+    historicoChatIA:=  [
         {'role': 'system', 'content': '''
                 Você é o Oswaldo, um bot do telegram e um assistente virtual simpático capaz 
                 de utilizar dados de portais públicos oficiais de saúde sobre vacinação, 
@@ -42,7 +43,9 @@ sessao = {
                 brasileiro.'''},
             ],
 }
+"""
 # { chat_id: { 'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': [] } }
+sessao = {}
 #Obs: sempre que for editar uma mensagem, use usempre use s['ultima_mensagem'] — nunca message.message_id
 def get_sessao(chat_id):
     if chat_id not in sessao:
@@ -127,7 +130,7 @@ def answer(callback):
             chat_id=callback.message.chat.id,
             message_id=s['ultima_mensagem'],
             text='Olá! Estou pronto para receber suas dúvidas.'
-        )        
+        )
 '''def terceiroMenu(message):
     texto = scrappingVacinaInfoIndividual(message.text)
     enviar_mensagem_longa(message.chat.id, texto)'''
@@ -152,12 +155,17 @@ def salvar_idade(idade):
     idadeAtual.append(meses)
     return idadeAtual
 
-def enviar_mensagem_longa(chat_id, texto):
+def enviar_mensagem_longa(message, texto):
+    s = get_sessao(message.chat.id)
     limite = 4096
     # divide o texto em partes de 4096 caracteres
     for i in range(0, len(texto), limite):
         parte = texto[i:i + limite]
-        bot.send_message(chat_id, parte)
+        bot.edit_message_text(
+            chat_id = message.chat.id,
+            message_id = s['ultima_mensagem'],
+            text = parte
+        )
 
 def gestanteMensagem(message):
 
@@ -176,12 +184,14 @@ def gestanteMensagem(message):
     s['ultima_mensagem'] = message.message_id
 
 def perg_semanas_gestacao(message, from_callback = False):
-    '''bot.edit_message_text(
+    s = get_sessao(message.chat.id)
+    bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=s['ultima_mensagem'],
         text='Quantas semanas de gestação?'
-    )''' 
-    #bot.register_next_step_handler(message, #função sobre as vacinas de acordo com a semana de gestação)
+    )
+    bot.register_next_step_handler(message)
+    #Problema identificado: perg_nascimento() não está sendo chamado
     perg_nascimento(message, from_callback = from_callback)
     
 def perg_nascimento(message, from_callback = False):
@@ -214,7 +224,11 @@ def idadePorCategoria(message):
     idadeAtual = salvar_idade(message)
     idade = idadeAtual[1] + 12 * idadeAtual[0]
     if idade < 0:
-        bot.send_message(message.chat.id, "Categoria Inválida")
+        bot.edit_message_text(
+            chat_id=message.chat.id,
+            message_id=s['ultima_mensagem'],
+            text='Categoria inválida'
+        )
     if idade < 12 * 12:
         s['categoria'].append('crianca')
     elif idade < 18 * 12:
@@ -240,26 +254,20 @@ def idadePorCategoria(message):
         else:
             ultimoTexto = f' {tamanho} vacinas'
         texto = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
-        enviar_mensagem_longa(message.chat.id, texto)
-    perguntaMenu2(message, s['ultima_mensagem'])
+        enviar_mensagem_longa(message, texto)
+    perguntaMenu2(message)
 
 
-def perguntaMenu2(message, ultima_mensagem_id):
+def perguntaMenu2(message):
+    #Imprimir infos vacinas gerais
     markup2 = types.InlineKeyboardMarkup(row_width=2)
     respAvançar = types.InlineKeyboardButton('➡️', callback_data='avançar')
     respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
     markup2.add(respIA, respAvançar)
-
-    '''bot.edit_message_text(
-        chat_id=message.chat.id,
-        message_id=ultima_mensagem_id,
-        text="",
-        reply_markup=markup2
-    )'''
-
+    
 def main():
     #IA
-    IA.verificarModeloOllama(modelo)
+    #IA.verificarModeloOllama(modelo)
     
     # Scrapping
     print("Main pronta")
