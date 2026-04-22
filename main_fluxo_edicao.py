@@ -131,9 +131,6 @@ def answer(callback):
             message_id=s['ultima_mensagem'],
             text='Olá! Estou pronto para receber suas dúvidas.'
         )
-'''def terceiroMenu(message):
-    texto = scrappingVacinaInfoIndividual(message.text)
-    enviar_mensagem_longa(message.chat.id, texto)'''
 
 def salvar_idade(idade):
     idadeAtual = []
