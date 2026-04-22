@@ -117,12 +117,6 @@ def answer(callback):
         respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
         markup2.add(respIA, respAvançar)
 
-        '''bot.edit_message_text(
-            chat_id=callback.message.chat.id,
-            message_id=s['ultima_mensagem'],
-            text="",
-            reply_markup=markup2
-        )'''
         
     if callback.data == 'ia':
         s = get_sessao(callback.message.chat.id)
@@ -130,7 +124,7 @@ def answer(callback):
             chat_id=callback.message.chat.id,
             message_id=s['ultima_mensagem'],
             text='Olá! Estou pronto para receber suas dúvidas.'
-        )
+        )        
 
 def salvar_idade(idade):
     idadeAtual = []
@@ -161,14 +155,15 @@ def enviar_mensagem_longa(message, texto):
         bot.edit_message_text(
             chat_id = message.chat.id,
             message_id = s['ultima_mensagem'],
-            text = parte
+            text = parte,
+            reply_markup=perguntaMenu2()
         )
+        #bot.send_message(chat_id, parte)
 
 def gestanteMensagem(message):
 
     markup3 = types.InlineKeyboardMarkup(row_width=3)
-    respostaSim = types.InlineKeyboardButton(
-        'Sim', callback_data='yesPregnant')
+    respostaSim = types.InlineKeyboardButton('Sim', callback_data='yesPregnant')
     respostaNao = types.InlineKeyboardButton('Nao', callback_data='noPregnant')
     markup3.add(respostaSim, respostaNao)
     bot.edit_message_text(
@@ -188,7 +183,7 @@ def perg_semanas_gestacao(message, from_callback = False):
         text='Quantas semanas de gestação?'
     )
     bot.register_next_step_handler(message)
-    #Problema identificado: perg_nascimento() não está sendo chamado
+    #ver o que está dando problema
     perg_nascimento(message, from_callback = from_callback)
     
 def perg_nascimento(message, from_callback = False):
@@ -252,15 +247,15 @@ def idadePorCategoria(message):
             ultimoTexto = f' {tamanho} vacinas'
         texto = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
         enviar_mensagem_longa(message, texto)
-    perguntaMenu2(message)
 
-
-def perguntaMenu2(message):
+def perguntaMenu2():
     #Imprimir infos vacinas gerais
     markup2 = types.InlineKeyboardMarkup(row_width=2)
     respAvançar = types.InlineKeyboardButton('➡️', callback_data='avançar')
     respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
     markup2.add(respIA, respAvançar)
+    return markup2
+    
     
 def main():
     #IA
