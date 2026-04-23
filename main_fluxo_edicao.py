@@ -144,7 +144,7 @@ def enviar_mensagem_longa(message, texto):
             chat_id = message.chat.id,
             message_id = s['ultima_mensagem'],
             text = parte,
-            reply_markup=perguntaMenu2()
+            reply_markup=imprimir_infoVacinas()
         )
         #bot.send_message(chat_id, parte)
 
@@ -236,14 +236,15 @@ def idadePorCategoria(message):
         enviar_mensagem_longa(message, texto)
     s['num_pag'] = 0
 
-def perguntaMenu2():
+def imprimir_infoVacinas():
     #Imprimir infos vacinas gerais
     markup2 = types.InlineKeyboardMarkup(row_width=2)
     respAvançar = types.InlineKeyboardButton('➡️', callback_data='avançar')
     respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
     markup2.add(respIA, respAvançar)
     return markup2
-      
+    
+    
 def main():
     #IA
     #IA.verificarModeloOllama(modelo)
