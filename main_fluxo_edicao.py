@@ -99,13 +99,10 @@ def answer(callback):
         perg_nascimento(callback.message, from_callback = True)
 
     if callback.data == 'avançar':
-        s = get_sessao(callback.message.chat.id)
-        markup2 = types.InlineKeyboardMarkup(row_width=2)
-        respAvançar = types.InlineKeyboardButton('⬅️', callback_data='avançar')
-        respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
-        markup2.add(respIA, respAvançar)
-
-        
+        s['num_pag'] += 1
+        imprimir_infoVacinas(callback.message, s)
+    
+       
     if callback.data == 'ia':
         s = get_sessao(callback.message.chat.id)
         bot.edit_message_text(
