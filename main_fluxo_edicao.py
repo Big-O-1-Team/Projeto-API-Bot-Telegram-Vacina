@@ -134,7 +134,7 @@ def salvar_idade(idade):
     idadeAtual.append(meses)
     return idadeAtual
 
-def enviar_mensagem_longa(message, texto):
+'''def enviar_mensagem_longa(message, texto):
     s = get_sessao(message.chat.id)
     limite = 4096
     # divide o texto em partes de 4096 caracteres
@@ -145,8 +145,8 @@ def enviar_mensagem_longa(message, texto):
             message_id = s['ultima_mensagem'],
             text = parte,
             reply_markup=imprimir_infoVacinas()
-        )
-        #bot.send_message(chat_id, parte)
+        )'''
+
 
 def gestanteMensagem(message):
 
@@ -233,16 +233,32 @@ def idadePorCategoria(message):
             ultimoTexto = f' {tamanho} vacinas'
         texto = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
         s['texto_pag'].append(texto)
-        enviar_mensagem_longa(message, texto)
+        #enviar_mensagem_longa(message, texto)
     s['num_pag'] = 0
+    imprimir_infoVacinas(message, s)
 
-def imprimir_infoVacinas():
-    #Imprimir infos vacinas gerais
-    markup2 = types.InlineKeyboardMarkup(row_width=2)
-    respAvançar = types.InlineKeyboardButton('➡️', callback_data='avançar')
-    respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
-    markup2.add(respIA, respAvançar)
-    return markup2
+def imprimir_infoVacinas(message, s):
+    #identifica textos das categorias por "páginas"
+    pag = s['num_pag']
+    total_pag = len(s['texto_pag'])
+    texto = s['texto_pag'][pag]    
+
+    #botões para navegar entre as páginas e conversar com a IA
+    markup2 = types.InlineKeyboardMarkup(row_width=3)
+    botoes = []
+    if pag > 0:
+        botoes.append(types.InlineKeyboardButton('⬅️', callback_data='voltar'))
+    if pag < total_pag:
+        botoes.append(types.InlineKeyboardButton('➡️', callback_data='avançar'))
+    botoes.append(types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia'))
+    markup2.add(botoes)
+    
+    bot.edit_message(
+        chat_id=message.chat.id,
+        message_id=s['ultima_mensagem'],
+        text=texto,
+        reply_markup=markup2
+    )
     
     
 def main():
