@@ -88,19 +88,6 @@ def answer(callback):
     if callback.data == "answer_calendario_vacinal":
         gestanteMensagem(callback.message)
 
-    #Aqui que entra o código para integrar IA (*confirmar)
-    '''if callback.data == 'yes':
-        reply_keyboard = ReplyKeyboardMarkup(
-            resize_keyboard=True, one_time_keyboard=False)
-        for vacina in s['nomesVacinas']:
-            vacinaname = re.sub(r"\(.*?\)", '', vacina).strip()
-            reply_keyboard.add(f"{vacinaname}",)
-
-        bot.send_message(callback.message.chat.id,
-                         "Escolha uma Opção abaixo.", reply_markup=reply_keyboard)
-
-        bot.register_next_step_handler(callback.message, terceiroMenu)'''
-
     if callback.data == 'yesPregnant':
         s['categoria'].append('gestante')
 
