@@ -49,11 +49,11 @@ sessao = {}
 #Obs: sempre que for editar uma mensagem, use usempre use s['ultima_mensagem'] — nunca message.message_id
 def get_sessao(chat_id):
     if chat_id not in sessao:
-        sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None} 
+        sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': [], 'num_pag': 0} 
     return sessao[chat_id]
 
 def limpar_sessao(chat_id):
-    sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None}
+    sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': [], 'num_pag': 0}
 
 # função para o bot receber algo e retornar algo
 @bot.message_handler(commands=['start'])
@@ -87,6 +87,7 @@ def answer(callback):
     
     if callback.data == "answer_calendario_vacinal":
         gestanteMensagem(callback.message)
+
 
     if callback.data == 'yesPregnant':
         s['categoria'].append('gestante')
@@ -231,7 +232,9 @@ def idadePorCategoria(message):
         else:
             ultimoTexto = f' {tamanho} vacinas'
         texto = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
+        s['texto_pag'].append(texto)
         enviar_mensagem_longa(message, texto)
+    s['num_pag'] = 0
 
 def perguntaMenu2():
     #Imprimir infos vacinas gerais
@@ -240,8 +243,7 @@ def perguntaMenu2():
     respIA = types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia')
     markup2.add(respIA, respAvançar)
     return markup2
-    
-    
+      
 def main():
     #IA
     #IA.verificarModeloOllama(modelo)
