@@ -14,8 +14,6 @@ siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
 bot_token = os.getenv('BOT_TOKEN')
 
-
-
 # criar bot ligado com a chave
 bot = telebot.TeleBot(bot_token)
 #Variáveis Globais
@@ -46,6 +44,10 @@ def answer(callback):
     if callback.data == "answer_calendario_vacinal":
         gestanteMensagem(callback.message)
         bot.answer_callback_query(callback.id)
+    
+    if callback.data == "answer_unidades_proximas":
+	pedir_localizacao(callback.message)
+
     if callback.data == 'yes':
         reply_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
         for vacina in nomesVacina:
@@ -62,7 +64,6 @@ def answer(callback):
         bot.send_message(callback.message.chat.id, "Digite a sua data de nascimento")
         bot.register_next_step_handler(callback.message, idadePorCategoria)
         bot.answer_callback_query(callback.id)
-
 
     if  callback.data == 'noPregnant':
         bot.send_message(callback.message.chat.id, "Digite a sua data de nascimento")
@@ -108,6 +109,18 @@ def gestanteMensagem(message):
     bot.send_message(message.chat.id,"Você é gestante?", reply_markup=markup3)
 
 
+def pedir_localizacao(message):	   # pede localização
+        markup = types.ReplyKeyboardMarkup(row_width=1)
+        botao_loc = KeyboardButton('📍 Compartilhar localização', request_location=True)
+        markup.add(botao_loc)
+        bot.send_message(message.chat.id, "Recebendo a localização", reply_markup = markup)
+ 
+@bot.message_handler(content_types=['location']) #bot recebe localizacao
+def receber_localizacao(message):
+	latitude = message.location.latitude
+	longitude = message.location.longitude
+
+
 def idadePorCategoria(message):
     idadeAtual = salvar_idade(message)
     idade = idadeAtual[1] + 12 * idadeAtual[0]
@@ -141,14 +154,12 @@ def idadePorCategoria(message):
         enviar_mensagem_longa(message.chat.id, texto)
     perguntaMenu2(message)
         
-
 def perguntaMenu2(message):
     markup2 = types.InlineKeyboardMarkup(row_width=3)
     respostaSim = types.InlineKeyboardButton('Sim', callback_data= 'yes')
     respostaNao = types.InlineKeyboardButton('Nao', callback_data= 'no')
     markup2.add(respostaSim, respostaNao)
     bot.send_message(message.chat.id,"Gostaria de saber mais informações sobre alguma vacina?", reply_markup=markup2)
-
 
 def main():
     #Scrapping 
