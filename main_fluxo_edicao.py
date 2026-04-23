@@ -101,6 +101,10 @@ def answer(callback):
     if callback.data == 'avançar':
         s['num_pag'] += 1
         imprimir_infoVacinas(callback.message, s)
+        
+    if callback.data == "voltar":
+        s['num_pag'] -= 1
+        imprimir_infoVacinas(callback.message, s)
     
        
     if callback.data == 'ia':
