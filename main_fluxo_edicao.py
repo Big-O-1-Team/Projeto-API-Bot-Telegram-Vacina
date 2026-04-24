@@ -22,28 +22,8 @@ bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
 
 # Variáveis Globais
-"""
 modelo = 'gemma3n:e2b'
-sessao = {
-    historicoChatIA:=  [
-        {'role': 'system', 'content': '''
-                Você é o Oswaldo, um bot do telegram e um assistente virtual simpático capaz 
-                de utilizar dados de portais públicos oficiais de saúde sobre vacinação, 
-                com o objetivo de informar o cidadão sobre: Calendário de vacinação para 
-                diferentes faixas etárias (crianças, adolescentes/jovens, adultos e idosos). 
-                Coberturas vacinais em diferentes regiões brasileiras. Informações gerais 
-                sobre vacinas disponíveis. Você irá interagir com o usuário 
-                utilizando o Telegram. Responda de forma curta, apenas á perguntas sobre vacinas, e apenas
-                informações brasileiras. Responda apenas em Português brasileiro. Apenas use '*' quando 
-                for para organizar o texto em tópicos.
-                IMPORTANTE: Não responda a esta mensagem de forma alguma.'''},
-        {'role': 'assistant', 'content': '''
-                Entendido. Sou o Oswaldo, um bot do telegram e um assistente virtual simpático, 
-                apenas responderei a perguntas sobre vacinas no brasil, e apenas falarei em português 
-                brasileiro.'''},
-            ],
-}
-"""
+historicoChatIA = {}
 # { chat_id: { 'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': [] } }
 sessao = {}
 #Obs: sempre que for editar uma mensagem, use usempre use s['ultima_mensagem'] — nunca message.message_id
@@ -114,6 +94,12 @@ def answer(callback):
             message_id=s['ultima_mensagem'],
             text='Olá! Estou pronto para receber suas dúvidas.'
         )        
+        bot.register_next_step_handler
+        
+        (callback.message, conversarIA)
+        
+def conversarIA(message):
+    bot.send_message(message.chat.id, IA.chatIA(message.chat.id, message.text, modelo, historicoChatIA))
 
 def salvar_idade(idade):
     idadeAtual = []
@@ -134,20 +120,6 @@ def salvar_idade(idade):
     idadeAtual.append(anos)
     idadeAtual.append(meses)
     return idadeAtual
-
-'''def enviar_mensagem_longa(message, texto):
-    s = get_sessao(message.chat.id)
-    limite = 4096
-    # divide o texto em partes de 4096 caracteres
-    for i in range(0, len(texto), limite):
-        parte = texto[i:i + limite]
-        bot.edit_message_text(
-            chat_id = message.chat.id,
-            message_id = s['ultima_mensagem'],
-            text = parte,
-            reply_markup=imprimir_infoVacinas()
-        )'''
-
 
 def gestanteMensagem(message):
 
@@ -171,7 +143,18 @@ def perg_semanas_gestacao(message, from_callback = False):
         message_id=s['ultima_mensagem'],
         text='Quantas semanas de gestação?'
     )
-    bot.register_next_step_handler(message, lambda msg: perg_nascimento(msg, from_callback = False))
+    bot.register_next_step_handler(message, receber_semana)
+    
+def receber_semana(message):
+    s = get_sessao(message.chat.id)
+    try:
+        bot.delete_message(
+            chat_id=message.chat.id,
+            message_id=message.message_id
+        )
+    except Exception:
+        pass
+    perg_nascimento(message, from_callback = False)
     
 def perg_nascimento(message, from_callback = False):
     s = get_sessao(message.chat.id)
@@ -249,22 +232,21 @@ def imprimir_infoVacinas(message, s):
     botoes = []
     if pag > 0:
         botoes.append(types.InlineKeyboardButton('⬅️', callback_data='voltar'))
-    if pag < total_pag:
-        botoes.append(types.InlineKeyboardButton('➡️', callback_data='avançar'))
     botoes.append(types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia'))
-    markup2.add(botoes)
+    if pag < total_pag - 1:
+        botoes.append(types.InlineKeyboardButton('➡️', callback_data='avançar'))
+    markup2.add(*botoes)
     
-    bot.edit_message(
+    bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=s['ultima_mensagem'],
         text=texto,
         reply_markup=markup2
     )
     
-    
 def main():
     #IA
-    #IA.verificarModeloOllama(modelo)
+    IA.verificarModeloOllama(modelo)
     
     # Scrapping
     print("Main pronta")
