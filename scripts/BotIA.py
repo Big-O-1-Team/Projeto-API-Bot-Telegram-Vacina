@@ -26,11 +26,10 @@ def verificarModeloOllama(modelo):
 # Conversa com o modelo
 # message (obj) = objeto de mensagem do telebot
 # modelo (string) = nome do modelo encontrado no site do ollama
-# historicoChatIA = historico de mensagens
-def chatIA(message, modelo, historicoChatIA): 
-    cid = message.chat.id
-    if cid not in historicoChatIA:
-        historicoChatIA[cid] = [{'role': 'system', 'content': '''
+# historicoChatIA (lista) = historico de mensagens
+def chatIA(chat_id, texto, modelo, historicoChatIA): 
+    if chat_id not in historicoChatIA:
+        historicoChatIA[chat_id] = [{'role': 'system', 'content': '''
                 Você é o Oswaldo, um bot do telegram e um assistente virtual simpático capaz 
                 de utilizar dados de portais públicos oficiais de saúde sobre vacinação, 
                 com o objetivo de informar o cidadão sobre: Calendário de vacinação para 
@@ -47,10 +46,9 @@ def chatIA(message, modelo, historicoChatIA):
                 brasileiro.'''}]
     resposta: ollama.ChatResponse = ollama.chat(
         model = modelo,
-        messages = historicoChatIA[cid] + [{'role': 'user', 'content': message.text}]
+        messages = historicoChatIA[chat_id] + [{'role': 'user', 'content': texto}],
     )
-    texto = re.sub(r"<unused\d+>.*?<unused\d+>", "", resposta.message.content, flags=re.DOTALL)
-    historicoChatIA[cid] += [{'role': 'user', 'content': message.text}]
-    historicoChatIA[cid] += [{'role': 'assistant', 'content': texto}]
-    return texto
-
+    texto_respondido = re.sub(r"<unused\d+>.*?<unused\d+>", "", resposta.message.content, flags=re.DOTALL)
+    historicoChatIA[chat_id] += [{'role': 'user', 'content': texto}]
+    historicoChatIA[chat_id] += [{'role': 'assistant', 'content': texto_respondido}]
+    return texto_respondido
