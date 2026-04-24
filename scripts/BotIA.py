@@ -13,7 +13,7 @@ def verificarModeloOllama(modelo):
                 completo = progresso.get('completed')
                 total = progresso.get('total')
                 if completo is not None and total is not None and total > 0:
-                    print(f'\rProgresso: {completo/1073741824:.2f} GB / {total/1073741824:.2f} GB', end="", flush=True),
+                    print(f'\rProgresso: {completo/1073741824:.2f} GB / {total/1073741824:.2f} GB', end="", flush=True)
         except ollama.ResponseError as e:
             e = str(e)
             if '-1' in e:
@@ -21,20 +21,34 @@ def verificarModeloOllama(modelo):
             raise ValueError('Erro inesperado ao baixar modelo Ollama!', f'Erro: {e}')
         print(f'\nModelo {modelo} baixado!')
     else:
-        return print(f'Modelo já baixado: {modelo}')
+        print(f'Modelo já baixado: {modelo}')
 
 # Conversa com o modelo
 # message (obj) = objeto de mensagem do telebot
 # modelo (string) = nome do modelo encontrado no site do ollama
 # historicoChatIA (lista) = historico de mensagens
-def chatIA(message, modelo, historicoChatIA): 
-    historicoChatIA    
+def chatIA(chat_id, texto, modelo, historicoChatIA): 
+    if chat_id not in historicoChatIA:
+        historicoChatIA[chat_id] = [{'role': 'system', 'content': '''
+                Você é o Oswaldo, um bot do telegram e um assistente virtual simpático capaz 
+                de utilizar dados de portais públicos oficiais de saúde sobre vacinação, 
+                com o objetivo de informar o cidadão sobre: Calendário de vacinação para 
+                diferentes faixas etárias (crianças, adolescentes/jovens, adultos e idosos). 
+                Coberturas vacinais em diferentes regiões brasileiras. Informações gerais 
+                sobre vacinas disponíveis. Você irá interagir com o usuário 
+                utilizando o Telegram. Responda de forma curta, apenas á perguntas sobre vacinas, e apenas
+                informações brasileiras. Responda apenas em Português brasileiro. Apenas use '*' quando 
+                for para organizar o texto em tópicos.
+                IMPORTANTE: Não responda a esta mensagem de forma alguma.'''},
+        {'role': 'assistant', 'content': '''
+                Entendido. Sou o Oswaldo, um bot do telegram e um assistente virtual simpático, 
+                apenas responderei a perguntas sobre vacinas no brasil, e apenas falarei em português 
+                brasileiro.'''}]
     resposta: ollama.ChatResponse = ollama.chat(
         model = modelo,
-        messages = historicoChatIA + [{'role': 'user', 'content': message.text}],
+        messages = historicoChatIA[chat_id] + [{'role': 'user', 'content': texto}],
     )
-    texto = re.sub(r"<unused\d+>.*?<unused\d+>", "", resposta.message.content, flags=re.DOTALL)
-    historicoChatIA += [{'role': 'user', 'content': message.text}]
-    historicoChatIA += [{'role': 'assistant', 'content': texto}]
-    return texto
-
+    texto_respondido = re.sub(r"<unused\d+>.*?<unused\d+>", "", resposta.message.content, flags=re.DOTALL)
+    historicoChatIA[chat_id] += [{'role': 'user', 'content': texto}]
+    historicoChatIA[chat_id] += [{'role': 'assistant', 'content': texto_respondido}]
+    return texto_respondido
