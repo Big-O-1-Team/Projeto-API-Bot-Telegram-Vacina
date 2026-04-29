@@ -30,7 +30,7 @@ def criar_sessao(chat_id):
     return sessao[chat_id]
 #✅
 def limpar_sessao(chat_id):
-    sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': '', 'pag_atual': 0}
+    sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': [], 'pag_atual': 0}
 
 #✅
 @bot.message_handler(commands=['start'])
@@ -80,7 +80,7 @@ def answer(callback):
     elif callback.data == 'sair':
         receber(callback.message)
 
-
+#🔁
 def conversarIA(message, s):
     s = criar_sessao(message.chat.id)
     markup = types.InlineKeyboardMarkup(row_width=1)
@@ -95,7 +95,7 @@ def conversarIA(message, s):
     except Exception:
         bot.send_message(s, "Olá, como posso te ajudar?🐧")
     bot.register_next_step_handler(message, iaPensando)
-
+#🔁
 def iaPensando(message, s):
     s = criar_sessao(message.chat.id)
     markup = types.InlineKeyboardMarkup(row_width=1)
@@ -167,9 +167,9 @@ def idadePorCategoria(message):
             message_id=s['ultima_mensagem'],
             text='Categoria inválida'
         )
-    if idade < 14 * 12:
+    if idade <= 14 * 12:
         s['categoria'].append('crianca')
-    if idade < 24 * 12:
+    if idade <= 24 * 12:
         s['categoria'].append('adolescente')
     if idade < 60 * 12:
         s['categoria'].append('adulto')
@@ -179,7 +179,6 @@ def idadePorCategoria(message):
     #❌❌❌
     for categorias in s['categoria']:
         listaCategoriaFiltrada = createCSV.procuraInfoPCategoria(categorias, idade)
-
         #✅
         texto = 'O paciente em questão pode tomar as seguintes vacinas: \n\n'
         for periodo, vacina, doencas in listaCategoriaFiltrada:
@@ -193,9 +192,9 @@ def idadePorCategoria(message):
             ultimoTexto = f' {tamanho} vacina'
         else:
             ultimoTexto = f' {tamanho} vacinas'
-        texto_completo = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
-
-    #🔁   
+    texto_completo = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
+    print(s['categoria'])
+    print(texto_completo)
     s['pag_atual'] = 0
     imprimir_infoVacinas(message, s, texto_completo)
     try:
@@ -205,17 +204,33 @@ def idadePorCategoria(message):
     except Exception:
         pass
 
+def dividir_mensagem(texto, s):
+    limite = 4096
+    tamanho_texto = len(texto)
+    if tamanho_texto <= limite:
+        s['texto_pag'].append(texto)
+        return None
+    while tamanho_texto > 0:
+        sessao['texto_pag'].append(texto[:limite])
+        texto = texto[limite:]
+        tamanho_texto = len(texto)
+
+        
 #Criar função para calcular o tamanho máximo de caracteres que podem ter uma mensagem
 def num_pags(texto):
-    return
+    limite = 4096
+    tamanho_texto = len(texto)
+    if tamanho_texto % limite == 0: numero_de_paginas = tamanho_texto//limite
+    else: numero_de_paginas = (tamanho_texto//limite) + 1
+    return numero_de_paginas
 
 #❌
 def imprimir_infoVacinas(message, s, texto):
-    #identifica textos das categorias por "páginas"
+    #✅
     pag = s['pag_atual']
-    
     total_pag = num_pags(texto)
 
+    dividir_mensagem(texto, s)
     texto = s['texto_pag'][pag]    
     markup2 = types.InlineKeyboardMarkup(row_width=3)
     botoes = []
