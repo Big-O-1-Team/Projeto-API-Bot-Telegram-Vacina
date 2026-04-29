@@ -19,7 +19,7 @@ bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
 
 def main():
-    #IA
+
     #IA.verificarModeloOllama(modelo)
     
     # Scrapping
