@@ -2,7 +2,7 @@ import pandas as pd
 from IPython.display import display
 import csv
 import re
-
+#✅
 def CriarCSV(tabela):
     df = pd.DataFrame(tabela, columns=["Categoria","Periodo", "Vacina", "Doencas Evitadas"])
     df['Desde'] = df[['Periodo', 'Categoria']].apply(lambda row: extrairPeriodo(row['Periodo'], row['Categoria'])[0], axis=1)
@@ -10,8 +10,7 @@ def CriarCSV(tabela):
     CSVFile = df.to_csv("CategoriaInformacoes.csv", index=False)
     display(df)
     return CSVFile
-
-
+#✅
 def extrairPeriodo(periodo: str, categoria :str):
     periodo = periodo.lower().strip()
     categoria = categoria.lower().strip()
@@ -40,9 +39,7 @@ def extrairPeriodo(periodo: str, categoria :str):
                 return vetor_aux[0], vetor_aux[1]
             else:
                 return vetor_aux[0]*12, vetor_aux[1]*12
-
-
-
+#✅
 def procuraInfoPCategoria(categoria, idade):
     with open("CategoriaInformacoes.csv", 'r', encoding = 'utf-8') as arquivo:
         CSVFile= pd.read_csv(arquivo)
@@ -52,8 +49,8 @@ def procuraInfoPCategoria(categoria, idade):
         else:
             infoFiltrada = CSVFile[
                 (CSVFile['Categoria'] == categoria) &
-                (CSVFile['Desde']>=idade) &
-                (CSVFile['Ate']<=idade)
+                (CSVFile['Desde']<=idade) &
+                (CSVFile['Ate']>=idade)
             ]
         if infoFiltrada.empty:
             return []           
