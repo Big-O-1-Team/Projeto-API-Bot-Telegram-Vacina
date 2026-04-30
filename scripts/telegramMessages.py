@@ -36,10 +36,12 @@ def receber(message):
     nome_exibir = user.username if user.username else user.full_name
 
     #Salvar número de usuários que já utilizaram o bot
-    with shelve.open('usuários registrados') as user_dados:
-        if str(user.id) not in user_dados:
-            user_dados['Acessos'] = user_dados.get('Acessos',0) + 1
-            print(f'Novo usuário. Total de registros: {user_dados["Acessos"]}')
+  with shelve.open('usuários registrados') as user_dados:
+    if str(user.id) not in user_dados:
+        user_dados['Acessos'] = user_dados.get('Acessos', 0) + 1
+        print(f'Novo usuário. Total de registros: {user_dados["Acessos"]}')
+        user_dados[str(user.id)] = True
+        }
     
     limpar_sessao(message.chat.id)
     markup = types.InlineKeyboardMarkup(row_width=2)
