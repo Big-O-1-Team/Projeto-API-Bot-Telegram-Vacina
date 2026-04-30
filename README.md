@@ -76,11 +76,40 @@ O bot funcionará da seguinte forma:
 - ollama
 
 ---
+## Instalação do Ollama
+
+O Ollama é compatível com Windows, macOS e Linux, e pode ser usado localmente para rodar modelos de IA. Após instalado, fica disponível em `http://localhost:11434`.
+
+### Windows
+Baixe e instale o Ollama para Windows pelo [instalador oficial](https://ollama.com/download). Depois da instalação, o comando `ollama` fica disponível no terminal e o serviço roda em segundo plano.
+
+### macOS
+No [macOS](https://ollama.com/download), o método recomendado é abrir o arquivo `.dmg` e arrastar o Ollama para a pasta `Applications`. Ao iniciar, o aplicativo verifica se o comando `ollama` está no PATH.
+
+### Linux
+No [Linux](https://ollama.com/download), a instalação pode ser feita com o comando oficial:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+### Após instalar, teste a instalação executando:
+```bash
+ollama -v
+```
+
+### Ou abra o menu interativo com:
+```bash
+ollama
+```
+
 ### 1. Clonar o repositório principal
 ```bash
 git clone https://github.com/Big-O-1-Team/Projeto-API-Bot-Telegram-Vacina
 ```
 
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
 ### 1.1 Entre na pasta
 ```bash
 cd Projeto-API-Bot-Telegram-Vacina
