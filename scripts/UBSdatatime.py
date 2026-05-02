@@ -20,10 +20,10 @@ def processar_busca_ubs(bot, message) -> None:
     codigo = message.text.strip()
 
     if not re.fullmatch(r'\d{7}', codigo):
-        bot.send_message(message.chat.id, "⚠️ Código inválido. Use 7 números.")
+        bot.send_message(message.chat.id, "Código inválido. Use 7 números.")
         return
 
-    bot.send_message(message.chat.id, "⏳ Consultando base do CNES...")
+    bot.send_message(message.chat.id, "Consultando base do CNES...")
 
     try:
         lista_ubs = buscar_ubs_por_municipio(codigo)
