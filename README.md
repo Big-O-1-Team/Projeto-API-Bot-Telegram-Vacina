@@ -158,10 +158,10 @@ python main.py
 |2|Alta|Como usuário desejo saber informações das vacinas e para que elas servem                          |✅|Sprint 1
 |3|Alta|Como cidadão quais vacinas estão disponíveis gratuitamente hoje nos postos de saúde               |✅|Sprint 1
 |**4**|**Alta**|**Como usuário desejo saber a cobertura de vacinação para o local em que eu resido**      |✅|**Sprint 2**
-|5|Alta|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                           |✅| Sprint 2 |
+|5|Alta|Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar no país             |✅| Sprint 2 |
 |6|Média|Como desenvolvedor desejo integrar o Ollama ao projeto para que o bot possa responder usando IA local|✅|Sprint 2
-|7|Baixa|Como deficiente visual desejo ter ferramentas para o acesso as informações do assistente virtual |🔄|Sprint 3
-|8|Baixa|Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar no país            |✅|Sprint 3
+|7|Média|Como cidadão desejo saber informações sobre as campanhas sazonais de vacinação de minha região   |🔄|Sprint 3
+|8|Baixa|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                          |🔄|Sprint 3
 </div>
 
 ## DoR - Definition of Ready <a id="dor"></a>
