@@ -5,7 +5,7 @@
 | Rank  | Prioridade |                                                        User Story                                                            | Estimativa | Sprint
 | :-----: | :----------: | :----------------------------------------------------------------------------------------------------------------------------: | :----------: | :-----------:
 |**1**|**Alta**|**Como usuário desejo saber a cobertura de vacinação para o local em que eu resido**                                   |✅|**Sprint 2**
-|2|Alta|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                                                        |✅|Sprint 2
+|2|Alta|Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar em algum país                                    |✅|Sprint 2
 |3|Média|Como desenvolvedor desejo integrar o Ollama ao projeto para que o bot possa responder usando IA local                         |✅|Sprint 2 
 
 </div>
