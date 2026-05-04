@@ -6,7 +6,7 @@
 | :-----: | :----------: | :----------------------------------------------------------------------------------------------------------------------------: | :----------: | :-----------:
 |**1**|**Alta**|**Como usuário desejo saber a cobertura de vacinação para o local em que eu resido**                                   |✅|**Sprint 2**
 |2|Alta|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                                                        |✅|Sprint 2
-|3|Alta|Como desenvolvedor desejo integrar o Ollama ao projeto para que o bot possa responder usando IA local                          |✅|Sprint 2 
+|3|Média|Como desenvolvedor desejo integrar o Ollama ao projeto para que o bot possa responder usando IA local                         |✅|Sprint 2 
 
 </div>
 
