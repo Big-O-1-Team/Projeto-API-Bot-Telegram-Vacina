@@ -3,9 +3,10 @@ import dotenv
 import os
 import telebot
 from telebot import types
+from telebot.types import KeyboardButton
 from datetime import date, datetime
 import scripts.BotIA as IA
-
+from scripts.googlemaps import busca_no_maps as BuscarUBS
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
@@ -82,6 +83,45 @@ def answer(callback):
     elif callback.data == 'sair':
         bot.clear_step_handler_by_chat_id(callback.message.chat.id)
         receber(callback.message)
+
+    elif callback.data == "answer_unidades_proximas":
+        botaoEscolherPessoaLoc(callback.message)
+
+    elif callback.data == 'locForMe':
+        pedir_localizacao(callback.message)
+
+    elif callback.data == 'locManually':
+        return  
+
+def botaoEscolherPessoaLoc(message):
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    respostaSim = types.InlineKeyboardButton('Localização atual', callback_data='locForMe')
+    respostaNao = types.InlineKeyboardButton('Inserir manualmente', callback_data='locManually')
+    markup.add(respostaSim, respostaNao)
+    bot.send_message(message.chat.id,"Escolha uma das opçoes abaixo",reply_markup=markup)
+
+    
+def pedir_localizacao(message):
+    markup = types.ReplyKeyboardMarkup(row_width=2)
+    botao_loc_sim = types.KeyboardButton('📍 Sim, compartilhar', request_location=True)
+    botao_loc_nao = types.KeyboardButton('📍 Não, mudei de ideia')
+    markup.add(botao_loc_sim, botao_loc_nao)
+    bot.send_message(message.chat.id, "Deseja compartilhar sua localização?",reply_markup=markup)
+    
+@bot.message_handler(content_types=['location'])
+def receber_localizacao(message):
+    latitude = message.location.latitude
+    longitude = message.location.longitude
+    localizacao = f"{latitude}, {longitude}"
+    print(f" latitude : {latitude}, longitude: {longitude}")
+    bot.send_message(message.chat.id, "Localização recebida!")
+    UBSPRoximas = BuscarUBS(localizacao)
+    texto = ''
+    for UBS in range(len(UBSPRoximas)):
+        texto += UBSPRoximas[UBS]['nome'] + '\n'
+        texto += UBSPRoximas[UBS]['endereco'] + '\n\n'
+    print(texto)
+    bot.send_message(message.chat.id,texto)
 
 #✅🔁
 def conversarIA(message):
