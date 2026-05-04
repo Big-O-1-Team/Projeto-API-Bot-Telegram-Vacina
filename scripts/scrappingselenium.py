@@ -16,7 +16,7 @@ try:
 except Exception as e:
     print(f"Não foi possível Aceitar os Cookies \n Ocorreu o problema: {e}")
     pass
-#✅
+
 def getHrefPCategoria():
     hrefCategoria = f"https://www.gov.br/saude/pt-br/vacinacao/calendario"
     return hrefCategoria

@@ -6,7 +6,9 @@ from telebot import types
 from telebot.types import KeyboardButton
 from datetime import date, datetime
 import scripts.BotIA as IA
+import shelve
 from scripts.googlemaps import busca_no_maps as BuscarUBS
+from scripts.othercountry import listCountries, InfoAcessPCountry
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
@@ -15,105 +17,135 @@ bot = telebot.TeleBot(bot_token)
 modelo = 'gemma3n:e2b'
 historicoChatIA = {}
 sessao = {}
-#✅
+
 def criar_sessao(chat_id):
     if chat_id not in sessao:
         sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': '', 'pag_atual': 0}
         return sessao[chat_id] 
     return sessao[chat_id]
-#✅
+
 def limpar_sessao(chat_id):
     sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': [], 'pag_atual': 0}
-#✅
+
 @bot.message_handler(commands=['start'])
-def receber(message):   
+def receber(message): 
+    #Conseguir informações do usuário
+    messageFromUser = message.from_user 
+    #Salvar o nome ou username do usuário
+    nome_exibir = messageFromUser.username if messageFromUser.username else messageFromUser.full_name
+
+        
+    limpar_sessao(message.chat.id)
+    markup = types.InlineKeyboardMarkup(row_width=2)
+  
     try:
-        markup = types.InlineKeyboardMarkup(row_width=3)
-        calendario_vacinal = types.InlineKeyboardButton('Conferir calendário de vacinas', callback_data='answer_calendario_vacinal')
-        unidades_proximas = types.InlineKeyboardButton('Buscar postos de vacinação', callback_data='answer_unidades_proximas')
-        conversar_IA = types.InlineKeyboardButton('Conversar com a nossa IA Oswaldo', callback_data='ia')
-        markup.add(calendario_vacinal, unidades_proximas, conversar_IA)
+        markup = types.InlineKeyboardMarkup(row_width=1)
+        calendario_vacinal = types.InlineKeyboardButton('📅 Calendário de vacinas', callback_data='answer_calendario_vacinal')
+        unidades_proximas = types.InlineKeyboardButton('🏥 Postos de vacinação', callback_data='answer_unidades_proximas')
+        conversar_IA = types.InlineKeyboardButton('🐧 Falar com nosso agente AI Oswaldo', callback_data='ia')
+        outroPais = types.InlineKeyboardButton('🗺️ Vacinas para outros países', callback_data='otherCountry')
+        markup.add(calendario_vacinal, unidades_proximas, conversar_IA, outroPais)
         bot.edit_message_text(message.chat.id, text='Gostaria de fazer uma nova consulta? (Selecione uma das opções abaixo)', reply_markup=markup)
     except:
         limpar_sessao(message.chat.id)
         criar_sessao(message.chat.id)
         #Botões Iniciais
-        markup = types.InlineKeyboardMarkup(row_width=3)
-        calendario_vacinal = types.InlineKeyboardButton('Conferir calendário de vacinas', callback_data='answer_calendario_vacinal')
-        unidades_proximas = types.InlineKeyboardButton('Buscar postos de vacinação', callback_data='answer_unidades_proximas')
-        conversar_IA = types.InlineKeyboardButton('Conversar com a nossa IA Oswaldo', callback_data='ia')
-        markup.add(calendario_vacinal, unidades_proximas, conversar_IA)
-        bot.send_message(message.chat.id, 'Olá! Meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir? (Selecione uma das opções abaixo)', reply_markup=markup)
+        markup = types.InlineKeyboardMarkup(row_width=1)
+        calendario_vacinal = types.InlineKeyboardButton('📅 Calendário de vacinas', callback_data='answer_calendario_vacinal')
+        unidades_proximas = types.InlineKeyboardButton('🏥 Postos de vacinação', callback_data='answer_unidades_proximas')
+        conversar_IA = types.InlineKeyboardButton('🐧 Falar com nosso agente AI Oswaldo', callback_data='ia')
+        outroPais = types.InlineKeyboardButton('🗺️ Vacinas para outros países', callback_data='otherCountry')
+        markup.add(calendario_vacinal, unidades_proximas, conversar_IA, outroPais)
+        bot.send_message(message.chat.id, f'Olá!🐧 {nome_exibir},meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir?', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(callback):
-    #✅
     s = criar_sessao(callback.message.chat.id)
     try:
         bot.answer_callback_query(callback.id, text = 'aguarde')
     except Exception as e:
         print(e)
         pass
-    #✅
     if callback.data == "answer_calendario_vacinal":
         gestanteMensagem(callback.message)
-    #✅
     elif callback.data == 'yesPregnant':
         s['categoria'].append('gestante')
         perg_nascimento(callback.message)
-    #✅
     elif callback.data == 'noPregnant':
         perg_nascimento(callback.message)
-    #✅
     elif callback.data == 'avançar':
         s['pag_atual'] += 1
         imprimir_infoVacinas(callback.message, s, '')
-    #✅
     elif callback.data == "voltar":
         s['pag_atual'] -= 1
         imprimir_infoVacinas(callback.message, s, '')
-    #✅
     elif callback.data == 'ia':
         markup = types.InlineKeyboardMarkup(row_width=1)
         sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
         bot.send_message(callback.message.chat.id, 'Qual seria a sua dúvida?')
         bot.register_next_step_handler(callback.message, conversarIA)
-    #✅
     elif callback.data == 'sair':
         bot.clear_step_handler_by_chat_id(callback.message.chat.id)
         receber(callback.message)
-
     elif callback.data == "answer_unidades_proximas":
         botaoEscolherPessoaLoc(callback.message)
-
     elif callback.data == 'locForMe':
         pedir_localizacao(callback.message)
-
     elif callback.data == 'locManually':
-        return  
+        bot.send_message(callback.message.chat.id, "Digite o endereço")
+        bot.register_next_step_handler(callback.message, receber_localizacao)
+        return   
+    elif callback.data =='otherCountry':
+        messageOtherCountry(callback.message)
+
+def messageOtherCountry(message):
+    countryButton = []
+    lista = listCountries()
+    markup = types.ReplyKeyboardMarkup(row_width=2)
+    for country in lista:
+        countryButton.append(types.KeyboardButton(country))
+    markup.add(*countryButton)
+    bot.send_message(message.chat.id, 'Escolha o país que você viajará: ', reply_markup=markup)
+    bot.register_next_step_handler(message, answerOtherCountry)
+
+def answerOtherCountry(message):
+    s =criar_sessao(message.chat.id)
+    msg = bot.send_message(message.chat.id, "🔄️ Buscando Informações, aguarde...")
+    s['ultima_mensagem'] = msg.message_id
+    infos = InfoAcessPCountry(message.text)
+    imprimir_infoVacinas(message,s, infos)
 
 def botaoEscolherPessoaLoc(message):
+    s =criar_sessao(message.chat.id)
     markup = types.InlineKeyboardMarkup(row_width=2)
     respostaSim = types.InlineKeyboardButton('Localização atual', callback_data='locForMe')
     respostaNao = types.InlineKeyboardButton('Inserir manualmente', callback_data='locManually')
     markup.add(respostaSim, respostaNao)
-    bot.send_message(message.chat.id,"Escolha uma das opçoes abaixo",reply_markup=markup)
+    msg = bot.send_message(message.chat.id,"Escolha uma das opçoes abaixo",reply_markup=markup)
+    s['ultima_mensagem'] = msg.message_id
 
     
 def pedir_localizacao(message):
+    s =criar_sessao(message.chat.id)
     markup = types.ReplyKeyboardMarkup(row_width=2)
     botao_loc_sim = types.KeyboardButton('📍 Sim, compartilhar', request_location=True)
     botao_loc_nao = types.KeyboardButton('📍 Não, mudei de ideia')
     markup.add(botao_loc_sim, botao_loc_nao)
-    bot.send_message(message.chat.id, "Deseja compartilhar sua localização?",reply_markup=markup)
-    
+    msg = bot.send_message(message.chat.id, "Deseja compartilhar sua localização?",reply_markup=markup)
+    s['ultima_mensagem'] = msg.message_id
+
 @bot.message_handler(content_types=['location'])
 def receber_localizacao(message):
-    latitude = message.location.latitude
-    longitude = message.location.longitude
-    localizacao = f"{latitude}, {longitude}"
-    print(f" latitude : {latitude}, longitude: {longitude}")
+    s =criar_sessao(message.chat.id)
+    try:
+        latitude = message.location.latitude
+        longitude = message.location.longitude
+        localizacao = f"{latitude}, {longitude}"
+        print(f" latitude : {latitude}, longitude: {longitude}")
+    except:
+        localizacao = message.text
+        print(f" endereco : {localizacao}")
     bot.send_message(message.chat.id, "Localização recebida!")
     UBSPRoximas = BuscarUBS(localizacao)
     texto = ''
@@ -121,9 +153,10 @@ def receber_localizacao(message):
         texto += UBSPRoximas[UBS]['nome'] + '\n'
         texto += UBSPRoximas[UBS]['endereco'] + '\n\n'
     print(texto)
-    bot.send_message(message.chat.id,texto)
+    msg = bot.send_message(message.chat.id, texto)
+    s['ultima_mensagem'] = msg.message_id
 
-#✅🔁
+
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
     sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
@@ -132,7 +165,7 @@ def conversarIA(message):
     bot.send_message(message.chat.id, text= resposta, reply_markup=markup)
     bot.register_next_step_handler(message, conversarIA)
 
-#✅   
+
 def salvar_idade(idade):
     idadeAtual = []
     # Converte o texto digitado em uma data de verdade
@@ -151,7 +184,7 @@ def salvar_idade(idade):
     idadeAtual.append(anos)
     idadeAtual.append(meses)
     return idadeAtual
-#✅
+
 def gestanteMensagem(message):
     markup3 = types.InlineKeyboardMarkup(row_width=2)
     respostaSim = types.InlineKeyboardButton('Sim', callback_data='yesPregnant')
@@ -166,7 +199,7 @@ def gestanteMensagem(message):
     s = criar_sessao(message.chat.id)
     s['ultima_mensagem'] = message.message_id
 
-#✅
+
 def perg_nascimento(message):
     s = criar_sessao(message.chat.id)
     bot.edit_message_text(
@@ -175,7 +208,7 @@ def perg_nascimento(message):
         text='Qual sua data de nascimento? (DD/MM/AAAA)'
     )   
     bot.register_next_step_handler(message, idadePorCategoria)
-#✅
+
 def idadePorCategoria(message):
     s = criar_sessao(message.chat.id)
     idadeAtual = salvar_idade(message)
@@ -219,7 +252,7 @@ def idadePorCategoria(message):
             message_id=message.message_id)
     except Exception:
         pass
-#✅🔁
+
 def dividir_mensagem(texto, s):
     if s['texto_pag']:  
         return
@@ -233,7 +266,7 @@ def dividir_mensagem(texto, s):
                 string_atual = texto[:limite_individual]
         s['texto_pag'].append(texto[:limite_individual])
         texto = texto[limite_individual:]
-#✅🔁
+
 def num_pags(texto,s):
     if not texto:
         return len(s['texto_pag'])
@@ -242,7 +275,7 @@ def num_pags(texto,s):
     if tamanho_texto % limite == 0: numero_de_paginas = tamanho_texto//limite
     else: numero_de_paginas = (tamanho_texto//limite) + 1
     return numero_de_paginas
-#✅🔁
+
 def imprimir_infoVacinas(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
@@ -264,7 +297,8 @@ def imprimir_infoVacinas(message, s, texto):
         text=texto_pag,
         reply_markup=markup2
     )
-#✅
+    
+
 def iniciarBOT():
     while True:
         bot.polling(non_stop=True, interval=0, timeout=20)

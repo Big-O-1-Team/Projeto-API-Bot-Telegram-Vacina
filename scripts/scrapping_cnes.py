@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 import time
+
 def cria_driver(headless: bool = True) -> webdriver.Chrome:
     options = Options()
     if headless:
@@ -33,28 +34,15 @@ def UBSPublicOrNo(name: str) -> bool:
             wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, tabela)))
             time.sleep(3)
             UBSAtendeSUs = driver.find_element(By.CSS_SELECTOR, "[data-title-text='Atende SUS']").text.strip().lower()
-            UBSAtendeSUs = UBSAtendeSUs.replace(" ", "")
-            print(UBSAtendeSUs)
-            if UBSAtendeSUs == 'sim':
+            print(repr(UBSAtendeSUs))
+            if UBSAtendeSUs in 'sim':
                 print('True')
                 return True
             else:
                 print('False')
                 return False
         except:
-            print('nÃO ACHEI')
+            print('Não foi encontrado o elemento!')
             pass
     except Exception as e:
         print(f"Erro no Scraping: {e}")
-
-    
-    return resultados
-
-def formatar_mensagem_postos(municipio: str, postos: list[dict]) -> str:
-    if not postos: return f"❌ Nenhum posto encontrado em {municipio}."
-    
-    msg = f"💉 *Postos em {municipio}*\n\n"
-    for i, p in enumerate(postos, 1):
-        msg += f"*{i}. {p['nome']}*\n🏢 {p['tipo']}\n📍 {p['endereco']}\n\n"
-    return msg + "🔗 _Fonte: CNES/DATASUS_"
-UBSPublicOrNo('UBS COLONIAL')

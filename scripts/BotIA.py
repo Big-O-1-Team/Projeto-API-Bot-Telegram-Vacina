@@ -5,7 +5,7 @@ import telebot
 # modelo (string) = nome do modelo encontrado no site do ollama
 historico = {}
 SYSTEM_PROMPT ='''Você é um bot de assistencia pessoal'''
-#✅
+
 def verificarModeloOllama(modelo):
     print('Verificando se modelo Ollama está baixado...')
     modelosBaixados = [m.model.lower() for m in ollama.list().models]
@@ -25,7 +25,7 @@ def verificarModeloOllama(modelo):
         print(f'\nModelo {modelo} baixado!')
     else:
         return print(f'Modelo já baixado: {modelo}')
-#✅
+
 def chatIA(chat_id: int, message: str) -> str:
     if chat_id not in historico:
         historico[chat_id] = [{

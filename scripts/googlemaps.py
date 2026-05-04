@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from scripts.scrapping_cnes import UBSPublicOrNo
 
 def cria_driver(headless: bool = True) -> webdriver.Chrome:
     options = Options()
@@ -61,12 +62,13 @@ def busca_no_maps(local: str, limite: int = 5):
             except Exception:
                 pass
             if nome or endereco:
-                resultados.append({'consulta': query, 'nome': nome, 'endereco': resultado, 'url': driver.current_url})
-            if len(resultados) >= limite:
-                break
+                if UBSPublicOrNo:
+                    resultados.append({'consulta': query, 'nome': nome, 'endereco': resultado, 'url': driver.current_url})
+                else: break
+            if len(resultados) >= limite: break
         if not resultados:
             resultados.append({'consulta': query, 'nome': 'Nenhuma UBS encontrada', 'endereco': '', 'url': driver.current_url})
-    finally:
+    finally: 
         driver.quit()
     salvar_csv(resultados, 'ubs_próximas.csv')
     return resultados
