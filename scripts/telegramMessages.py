@@ -7,6 +7,7 @@ from telebot import types
 from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from datetime import date, datetime
 import selenium
+import shelve
 
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
@@ -27,7 +28,21 @@ def limpar_sessao(chat_id):
 
 
 @bot.message_handler(commands=['start'])
-def receber(message):   
+def receber(message):
+    
+    #Conseguir informações do usuário
+    user = message.from_user 
+    #Salvar o nome ou username do usuário
+    nome_exibir = user.username if user.username else user.full_name
+
+    #Salvar número de usuários que já utilizaram o bot
+  with shelve.open('usuários registrados') as user_dados:
+    if str(user.id) not in user_dados:
+        user_dados['Acessos'] = user_dados.get('Acessos', 0) + 1
+        print(f'Novo usuário. Total de registros: {user_dados["Acessos"]}')
+        user_dados[str(user.id)] = True
+        }
+    
     limpar_sessao(message.chat.id)
     markup = types.InlineKeyboardMarkup(row_width=2)
 
@@ -37,7 +52,7 @@ def receber(message):
         'Buscar postos de vacinação', callback_data='answer_unidades_proximas')
     #Conjunto de botões 
     markup.add(calendario_vacinal, unidades_proximas)
-    bot.send_message(message.chat.id, 'Olá! Meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir? (Selecione uma das opções abaixo', reply_markup=markup)
+    bot.send_message(message.chat.id, f'Olá {nome_exibir}! Meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir? (Selecione uma das opções abaixo', reply_markup=markup)
 
  #resposta ao click do botão
 @bot.callback_query_handler(func=lambda call: True)
