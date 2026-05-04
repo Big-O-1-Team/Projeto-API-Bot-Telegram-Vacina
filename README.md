@@ -76,11 +76,40 @@ O bot funcionará da seguinte forma:
 - ollama
 
 ---
+## Instalação do Ollama
+
+O Ollama é compatível com Windows, macOS e Linux, e pode ser usado localmente para rodar modelos de IA. Após instalado, fica disponível em `http://localhost:11434`.
+
+### Windows
+Baixe e instale o Ollama para Windows pelo [instalador oficial](https://ollama.com/download). Depois da instalação, o comando `ollama` fica disponível no terminal e o serviço roda em segundo plano.
+
+### macOS
+No [macOS](https://ollama.com/download), o método recomendado é abrir o arquivo `.dmg` e arrastar o Ollama para a pasta `Applications`. Ao iniciar, o aplicativo verifica se o comando `ollama` está no PATH.
+
+### Linux
+No [Linux](https://ollama.com/download), a instalação pode ser feita com o comando oficial:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+### Após instalar, teste a instalação executando:
+```bash
+ollama -v
+```
+
+### Ou abra o menu interativo com:
+```bash
+ollama
+```
+
 ### 1. Clonar o repositório principal
 ```bash
 git clone https://github.com/Big-O-1-Team/Projeto-API-Bot-Telegram-Vacina
 ```
 
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
 ### 1.1 Entre na pasta
 ```bash
 cd Projeto-API-Bot-Telegram-Vacina
@@ -112,10 +141,12 @@ python main.py
 ```
 
 ## 💻 Tecnologias utilizadas <a id="tec"></a>
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
-![GitHub Badge](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
-![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" height="50">
+<img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white" height="50">
+<img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" height="50">
+<img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" height="50">
+<img src="https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white" height="50">
+
 ---
 
 <div align="center">
@@ -126,11 +157,11 @@ python main.py
 |**1**| **Alta**|**Como cidadão desejo um canal de comunicação de uso diário e simples para saber informações sobre meu calendário de vacinação (MVP)**|✅|**Sprint 1**
 |2|Alta|Como usuário desejo saber informações das vacinas e para que elas servem                          |✅|Sprint 1
 |3|Alta|Como cidadão quais vacinas estão disponíveis gratuitamente hoje nos postos de saúde               |✅|Sprint 1
-|4|Alta|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                           |🔄|Sprint 2
-|5|Média|Como usuário desejo saber a cobertura de vacinação para o local em que eu resido                 |🔄|Sprint 2
-|6|Média|Como usuário gostaria de ser alertado sobre a minha próxima vacina                               |🔄|Sprint 2
-|7|Baixa|Como deficiente visual desejo ter ferramentas para o acesso as informações do assistente virtual |🔄|Sprint 3
-|8|Baixa|Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar no país            |🔄|Sprint 3
+|**4**|**Alta**|**Como usuário desejo saber a cobertura de vacinação para o local em que eu resido**      |✅|**Sprint 2**
+|5|Alta|Como estrangeiro gostaria de saber quais vacinas são necessárias pra adentrar no país             |✅| Sprint 2 |
+|6|Média|Como desenvolvedor desejo integrar o Ollama ao projeto para que o bot possa responder usando IA local|✅|Sprint 2
+|7|Média|Como cidadão desejo saber informações sobre as campanhas sazonais de vacinação de minha região   |🔄|Sprint 3
+|8|Baixa|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                          |🔄|Sprint 3
 </div>
 
 ## DoR - Definition of Ready <a id="dor"></a>
