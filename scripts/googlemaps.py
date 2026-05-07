@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from scripts.scrapping_cnes import UBSPublicOrNo
 
 def cria_driver(headless: bool = True) -> webdriver.Chrome:
     options = Options()
@@ -24,34 +25,50 @@ def salvar_csv(resultados, arquivo='ubs_próximas.csv'):
 def busca_no_maps(local: str, limite: int = 5):
     query = f'UBS perto de {local}'.strip()
     url = f'https://www.google.com/maps/search/{quote_plus(query)}'
+    FEED_SELECTOR = 'div[role="feed"]'
+    ROLE_SELECTOR = 'div[role="article"]'
+    CSS_FONTHEADLINESMALL = '.fontHeadlineSmall'
     driver = cria_driver(headless=True)
     wait = WebDriverWait(driver, 15)
     resultados = []
     try:
         driver.get(url)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, FEED_SELECTOR)))
         print('Página carregada')
-        cards = driver.find_elements(By.CSS_SELECTOR, 'div[role="article"]')
-        print('busacando elementos...')
-        print('Qtd de resultados', len(cards))
-        for card in cards:
+        feed = driver.find_elements(By.CSS_SELECTOR, ROLE_SELECTOR)
+        print(feed)
+        for card in feed:
             nome = ''
             endereco = ''
             try:
-                nome = card.find_element(By.CSS_SELECTOR, 'h3').text.strip()
+                nome = card.find_element(By.CSS_SELECTOR, CSS_FONTHEADLINESMALL).text.strip()
             except Exception:
                 pass
             try:
                 endereco = card.text.strip()
+                linhas = endereco.split('\n')
+                linhas.pop(0)
+                linhas.pop(0)
+                linhas.pop(2)
+                linhas.pop(2)
+                linhas.pop(2)
+                linhas.pop(2)
+                if "Fechado" or "Aberto" in linhas[1]:
+                    if "Fechado" in linhas[1]:
+                        linhas[1] = linhas[1].replace("Fechado", "")
+                    else:
+                        linhas[1] = linhas[1].replace("Aberto", "")
+                resultado = "\n".join(linhas)
             except Exception:
                 pass
             if nome or endereco:
-                resultados.append({'consulta': query, 'nome': nome, 'endereco': endereco, 'url': driver.current_url})
-            if len(resultados) >= limite:
-                break
+                if UBSPublicOrNo:
+                    resultados.append({'consulta': query, 'nome': nome, 'endereco': resultado, 'url': driver.current_url})
+                else: break
+            if len(resultados) >= limite: break
         if not resultados:
             resultados.append({'consulta': query, 'nome': 'Nenhuma UBS encontrada', 'endereco': '', 'url': driver.current_url})
-    finally:
+    finally: 
         driver.quit()
     salvar_csv(resultados, 'ubs_próximas.csv')
     return resultados
@@ -64,10 +81,4 @@ def formatar_resultados(resultados):
         texto += f'{i}. {nome}\n{endereco}\n\n'
     return texto.strip()
 
-if __name__ == '__main__':
-    print('Testando scrapping.../n')
-    resultados = busca_no_maps('São José dos Campos SP', limite=5)
-    print('resultados brutos:')
-    print(resultados)
-    print('/n Resultados Formatados: /n')
-    print(formatar_resultados(resultados))
+

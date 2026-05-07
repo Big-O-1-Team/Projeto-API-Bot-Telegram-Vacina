@@ -1,8 +1,11 @@
 import ollama
 import re
-
+import telebot
 # Verifica se o modelo escolhido está baixado na máquina.
 # modelo (string) = nome do modelo encontrado no site do ollama
+historico = {}
+SYSTEM_PROMPT ='''Você é um bot de assistencia pessoal'''
+
 def verificarModeloOllama(modelo):
     print('Verificando se modelo Ollama está baixado...')
     modelosBaixados = [m.model.lower() for m in ollama.list().models]
@@ -23,18 +26,23 @@ def verificarModeloOllama(modelo):
     else:
         return print(f'Modelo já baixado: {modelo}')
 
-# Conversa com o modelo
-# message (obj) = objeto de mensagem do telebot
-# modelo (string) = nome do modelo encontrado no site do ollama
-# historicoChatIA (lista) = historico de mensagens
-def chatIA(message, modelo, historicoChatIA): 
-    historicoChatIA    
-    resposta: ollama.ChatResponse = ollama.chat(
-        model = modelo,
-        messages = historicoChatIA + [{'role': 'user', 'content': message.text}],
-    )
-    texto = re.sub(r"<unused\d+>.*?<unused\d+>", "", resposta.message.content, flags=re.DOTALL)
-    historicoChatIA += [{'role': 'user', 'content': message.text}]
-    historicoChatIA += [{'role': 'assistant', 'content': texto}]
-    return texto
+def chatIA(chat_id: int, message: str) -> str:
+    if chat_id not in historico:
+        historico[chat_id] = [{
+            'role': 'System',
+            'content': SYSTEM_PROMPT
+        }]
+    historico[chat_id].append({
+        'role': 'user',
+        'content': message
+    })
+    Bot = ollama.chat(model= 'llama3.1:8b', messages=historico[chat_id])
+    resposta = Bot['message']['content']
+    historico[chat_id].append({
+        'role':'IA',
+        'content': resposta
+    })
+    return resposta
+
+
 

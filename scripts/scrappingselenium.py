@@ -2,13 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import re
+from scripts.googlemaps import cria_driver
 
-nav = webdriver.Chrome()
+nav = cria_driver()
 dominioGoverno = 'https://www.gov.br'
 siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 nav.get(siteVacinacao)
 
-#Aceitar Cookies
+
 try:
     cookieButton = nav.find_element(By.XPATH, "/html/body/div[5]/div/div/div/div/div[2]/button[3]")
     cookieButton.click()
@@ -51,7 +52,7 @@ def AcessarInformacoes():
                     try:
                         primeiroServ = servs.find_element(By.CSS_SELECTOR, "a.servico-primeiro-nivel")
                         periodo = nav.execute_script("return arguments[0].innerText;", primeiroServ)
-                        print(periodo.strip())
+                        print(f"\033[32m-{periodo.strip()} \033[0m")
                     except:
                         pass
                     #segundo nivel
@@ -64,8 +65,7 @@ def AcessarInformacoes():
                             texto_doenca = nav.execute_script("return arguments[0].innerText;", deoncasEvitadas)
                             texto_vacina = ' '.join(texto_vacina.split())
                             texto_doenca = ' '.join(texto_vacina.split())
-                            print(f"-{texto_vacina.strip()}")
-                            print(f"-{texto_doenca.strip()}")
+                            print(f"\033[32m-{texto_vacina.strip()} \033[0m")
                             dados.append((i, periodo,  texto_vacina, texto_doenca))
                     except:
                         pass
@@ -79,55 +79,4 @@ def AcessarInformacoes():
 
 
 
-def getLinkVacina(name: str) -> str:
-    name = name.upper()
-    if 'BCG' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/b/bcg'
-    elif 'HEPATITE B' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/h/hepatites-virais/hepatite-b'
-    elif 'HEPATITE A' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/h/hepatites-virais/hepatite-a'
-    elif 'PENTA' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/p/pentavalente'
-    elif 'POLIOMELITE' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/p/poliomielite'
-    elif 'ROTAVIRUS' in name or 'ROTAVÍRUS' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/r/rotavirus'
-    elif 'MENINGITE' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/m/meningite'
-    elif 'FEBRE AMARELA' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/f/febre-amarela'
-    elif 'TRIPLICE VIRAL' in name or 'TRÍPLICE VIRAL' in name or 'TRÍPLICE VIRAL SCR' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/t/triplice-viral'
-    elif 'DTPA' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/dtpa'
-    elif 'DTP' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/dtp'
-    elif 'VARICELA' in name or 'CATAPORA' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/c/catapora-varicela'
-    elif 'HPV' in name or 'HPV4' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/h/hpv'
-    elif 'COVID' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/c/covid-19'
-    elif ' DT ' in name or name.endswith('DT'):
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/dt'
-    elif 'INFLUENZA' in name or 'GRIPE' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/influenza'
-    elif 'PNEUMO' in name:
-        return 'https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/p/pneumonia'
-    else:
-        return None
-def scrappingVacinaInfoIndividual(name):
-    link = getLinkVacina(name)
-    nav.get(link)
-    title = nav.find_element(By.CSS_SELECTOR, ".outstanding-title").text
-    primeiraparte = nav.find_element(By.CSS_SELECTOR, ".column.col-md-12 ")
-    reacoes = nav.find_elements(By.CSS_SELECTOR, ".xxmsonormal")
-    texto = title +'\n'
-    for xxmnsonormal in reacoes:
-        texto = xxmnsonormal.text + '\n\n' + texto
-    print(texto + '\n')
-    mainElement = nav.find_element(By.TAG_NAME, "main").text
-    return mainElement
 
-scrappingVacinaInfoIndividual('HPV')
