@@ -76,10 +76,10 @@ def answer(callback):
         perg_nascimento(callback.message)
     elif callback.data == 'avançar':
         s['pag_atual'] += 1
-        imprimir_infoVacinas(callback.message, s, '')
+        info_por_pag(callback.message, s, '')
     elif callback.data == "voltar":
         s['pag_atual'] -= 1
-        imprimir_infoVacinas(callback.message, s, '')
+        info_por_pag(callback.message, s, '')
     elif callback.data == 'ia':
         markup = types.InlineKeyboardMarkup(row_width=1)
         sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
@@ -114,7 +114,7 @@ def answerOtherCountry(message):
     msg = bot.send_message(message.chat.id, "🔄️ Buscando Informações, aguarde...")
     s['ultima_mensagem'] = msg.message_id
     infos = InfoAcessPCountry(message.text)
-    imprimir_infoVacinas(message,s, infos)
+    info_por_pag(message,s, infos)
 
 def botaoEscolherPessoaLoc(message):
     s =criar_sessao(message.chat.id)
@@ -245,7 +245,7 @@ def idadePorCategoria(message):
         ultimoTexto = f' {tamanho} vacinas'
     texto_completo = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
     s['pag_atual'] = 0
-    imprimir_infoVacinas(message, s, texto_completo)
+    info_por_pag(message, s, texto_completo)
     try:
         bot.delete_message(
             chat_id=message.chat.id,
@@ -257,15 +257,17 @@ def dividir_mensagem(texto, s):
     if s['texto_pag']:  
         return
     limite_individual = 300
-    caracteres = 'abcdefghijklmnopqrstuvwxyz:,.-êç '
     while texto:
-        string_atual = texto[:limite_individual].lower()
-        if string_atual in caracteres:
-            while string_atual in caracteres:
-                limite_individual+=1
-                string_atual = texto[:limite_individual]
-        s['texto_pag'].append(texto[:limite_individual])
-        texto = texto[limite_individual:]
+        if len(texto) <= limite_individual:
+            s['texto_pag'].append(texto)
+            break
+        corte = limite_individual
+        while corte > 0 and texto[corte] != 0:
+            corte -=1
+        if corte ==0:
+            corte = limite_individual
+        s['texto_pag'].append(texto[:corte])
+        texto = texto[corte:].strip(' ')
 
 def num_pags(texto,s):
     if not texto:
@@ -276,7 +278,7 @@ def num_pags(texto,s):
     else: numero_de_paginas = (tamanho_texto//limite) + 1
     return numero_de_paginas
 
-def imprimir_infoVacinas(message, s, texto):
+def info_por_pag(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
     total_pag = num_pags(texto,s)
