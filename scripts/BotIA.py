@@ -1,6 +1,7 @@
 import ollama
 import re
 import telebot
+import whisper
 # Verifica se o modelo escolhido está baixado na máquina.
 # modelo (string) = nome do modelo encontrado no site do ollama
 historico = {}
