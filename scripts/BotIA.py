@@ -45,5 +45,6 @@ def chatIA(chat_id: int, message: str) -> str:
     })
     return resposta
 
-
+def voz():
+    return
 
