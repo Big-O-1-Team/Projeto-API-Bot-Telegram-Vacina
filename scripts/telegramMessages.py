@@ -165,6 +165,7 @@ def processar_voz(message):
         tmp.flush()
         tmp_path = tmp.name
     bot.reply_to(message, IA.chatIA(message.chat.id, f'A fala a seguir veio de uma mensagem de voz, responda de acordo: {IA.voz(tmp_path)}'))
+    os.remove(tmp_path)
     
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
