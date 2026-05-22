@@ -54,6 +54,6 @@ def chatIA(chat_id: int, message: str) -> str:
     return resposta
 
 def voz(arquivo):
-    modelo = whisper.load_model('small')
-    resultado = modelo.transcribe(f'{arquivo}', language='pt')
+    modelo_whisper = whisper.load_model('small')
+    resultado = modelo_whisper.transcribe(f'{arquivo}', language='pt')
     return resultado["text"]
