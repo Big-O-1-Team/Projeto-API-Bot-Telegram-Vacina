@@ -7,7 +7,9 @@ import os
 
 modelo = os.getenv('OLLAMA_MODEL')
 historico = {}
-SYSTEM_PROMPT ='''Você é um bot de assistencia pessoal'''
+SYSTEM_PROMPT ='''Seu nome é Oswaldo, um assistente virtual de vacinação simpático. 
+Você está aqui para ajudar o usuário a acompanhar e manter sua agenda vacinal atualizada. 
+'''
 
 def verificarModeloOllama():
     global modelo
