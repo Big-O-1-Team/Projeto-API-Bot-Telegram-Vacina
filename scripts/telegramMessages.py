@@ -158,7 +158,8 @@ def receber_localizacao(message):
 
 @bot.message_handler(content_types=['voice'])
 def processar_voz(message):
-
+    arquivo_id = bot.get_file(message.voice.file_id)
+    arquivo_baixado = bot.download_file(arquivo_id.file_path)
 
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
