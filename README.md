@@ -74,6 +74,7 @@ O bot funcionará da seguinte forma:
 - bs4
 - requests
 - ollama
+- openai-whisper
 
 ---
 ## Instalação do Ollama
@@ -121,7 +122,7 @@ cd Projeto-API-Bot-Telegram-Vacina
 touch .env
 
 # Para criar o arquivo já com o conteúdo:
-echo "BOT_TOKEN='seu_token_aqui'" > .env
+echo -e "BOT_TOKEN='seu_token_aqui'\nOLLAMA_MODEL='nome_do_modelo_aqui'" > .env
 ```
 
 ### 3. Instale as dependências necessárias
@@ -133,6 +134,7 @@ pip install beautifulsoup4
 pip install requests
 pip install ipython
 pip install selenium
+pip install openai-whisper
 ```
 
 ### 4. Execute o bot
