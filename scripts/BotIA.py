@@ -33,7 +33,7 @@ def verificarModeloOllama():
             raise ValueError('Erro inesperado ao baixar modelo Ollama!', f'Erro: {e}')
         print(f'\nModelo {modelo} baixado!')
     else:
-        return print(f'Modelo já baixado: {modelo}')
+        return print(f'Modelo carregado: {modelo}')
 
 def chatIA(chat_id: int, message: str) -> str:
     global modelo
