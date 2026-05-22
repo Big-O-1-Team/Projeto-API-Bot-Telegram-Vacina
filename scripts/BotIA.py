@@ -2,12 +2,15 @@ import ollama
 import re
 import telebot
 import whisper
-# Verifica se o modelo escolhido está baixado na máquina.
-# modelo (string) = nome do modelo encontrado no site do ollama
+import dotenv
+import os
+
+modelo = os.getenv('OLLAMA_MODEL')
 historico = {}
 SYSTEM_PROMPT ='''Você é um bot de assistencia pessoal'''
 
-def verificarModeloOllama(modelo):
+def verificarModeloOllama():
+    global modelo
     print('Verificando se modelo Ollama está baixado...')
     modelosBaixados = [m.model.lower() for m in ollama.list().models]
     if not modelo in modelosBaixados:
@@ -28,6 +31,7 @@ def verificarModeloOllama(modelo):
         return print(f'Modelo já baixado: {modelo}')
 
 def chatIA(chat_id: int, message: str) -> str:
+    global modelo
     if chat_id not in historico:
         historico[chat_id] = [{
             'role': 'System',
@@ -37,7 +41,7 @@ def chatIA(chat_id: int, message: str) -> str:
         'role': 'user',
         'content': message
     })
-    Bot = ollama.chat(model= 'llama3.1:8b', messages=historico[chat_id])
+    Bot = ollama.chat(model= modelo, messages=historico[chat_id])
     resposta = Bot['message']['content']
     historico[chat_id].append({
         'role':'IA',
