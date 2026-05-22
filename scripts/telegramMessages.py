@@ -160,7 +160,11 @@ def receber_localizacao(message):
 def processar_voz(message):
     arquivo_id = bot.get_file(message.voice.file_id)
     arquivo_baixado = bot.download_file(arquivo_id.file_path)
-
+    with tempfile.NamedTemporaryFile(suffix='.ogg', delete=False) as tmp:
+        tmp.write(arquivo_baixado)
+        tmp.flush()
+        tmp_path = tmp.name
+    
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
     sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
