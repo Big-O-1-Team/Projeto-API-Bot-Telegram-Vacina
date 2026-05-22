@@ -48,7 +48,7 @@ def chatIA(chat_id: int, message: str) -> str:
     Bot = ollama.chat(model= modelo, messages=historico[chat_id])
     resposta = Bot['message']['content']
     historico[chat_id].append({
-        'role':'IA',
+        'role':'assistant',
         'content': resposta
     })
     return resposta
