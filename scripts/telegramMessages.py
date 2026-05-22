@@ -14,7 +14,6 @@ siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
 bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
-modelo = 'gemma3n:e2b'
 historicoChatIA = {}
 sessao = {}
 
