@@ -1,6 +1,7 @@
 import scripts.createCSV as createCSV
 import dotenv
 import os
+import tempfile
 import telebot
 from telebot import types
 from telebot.types import KeyboardButton
@@ -14,7 +15,6 @@ siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
 bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
-modelo = 'gemma3n:e2b'
 historicoChatIA = {}
 sessao = {}
 
@@ -156,7 +156,17 @@ def receber_localizacao(message):
     msg = bot.send_message(message.chat.id, texto)
     s['ultima_mensagem'] = msg.message_id
 
-
+@bot.message_handler(content_types=['voice'])
+def processar_voz(message):
+    arquivo_id = bot.get_file(message.voice.file_id)
+    arquivo_baixado = bot.download_file(arquivo_id.file_path)
+    with tempfile.NamedTemporaryFile(suffix='.ogg', delete=False) as tmp:
+        tmp.write(arquivo_baixado)
+        tmp.flush()
+        tmp_path = tmp.name
+    bot.reply_to(message, IA.chatIA(message.chat.id, f'A fala a seguir veio de uma mensagem de voz, responda de acordo: {IA.voz(tmp_path)}'))
+    os.remove(tmp_path)
+    
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
     sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')

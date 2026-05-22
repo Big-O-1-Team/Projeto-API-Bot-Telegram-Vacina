@@ -1,12 +1,21 @@
 import ollama
 import re
 import telebot
-# Verifica se o modelo escolhido está baixado na máquina.
-# modelo (string) = nome do modelo encontrado no site do ollama
-historico = {}
-SYSTEM_PROMPT ='''Você é um bot de assistencia pessoal'''
+import whisper
+import dotenv
+import os
 
-def verificarModeloOllama(modelo):
+dotenv.load_dotenv() 
+
+modelo = os.getenv('OLLAMA_MODEL')
+historico = {}
+SYSTEM_PROMPT ='''Seu nome é Oswaldo, um assistente virtual de vacinação simpático. 
+Você está aqui para ajudar o usuário a acompanhar e manter sua agenda vacinal atualizada.
+responda de forma objetiva mas carismática, evite o uso de *.
+'''
+
+def verificarModeloOllama():
+    global modelo
     print('Verificando se modelo Ollama está baixado...')
     modelosBaixados = [m.model.lower() for m in ollama.list().models]
     if not modelo in modelosBaixados:
@@ -24,25 +33,28 @@ def verificarModeloOllama(modelo):
             raise ValueError('Erro inesperado ao baixar modelo Ollama!', f'Erro: {e}')
         print(f'\nModelo {modelo} baixado!')
     else:
-        return print(f'Modelo já baixado: {modelo}')
+        return print(f'Modelo carregado: {modelo}')
 
 def chatIA(chat_id: int, message: str) -> str:
+    global modelo
     if chat_id not in historico:
         historico[chat_id] = [{
-            'role': 'System',
+            'role': 'system',
             'content': SYSTEM_PROMPT
         }]
     historico[chat_id].append({
         'role': 'user',
         'content': message
     })
-    Bot = ollama.chat(model= 'llama3.1:8b', messages=historico[chat_id])
+    Bot = ollama.chat(model= modelo, messages=historico[chat_id])
     resposta = Bot['message']['content']
     historico[chat_id].append({
-        'role':'IA',
+        'role':'assistant',
         'content': resposta
     })
     return resposta
 
-
-
+def voz(arquivo):
+    modelo_whisper = whisper.load_model('small')
+    resultado = modelo_whisper.transcribe(f'{arquivo}', language='pt')
+    return resultado["text"]
