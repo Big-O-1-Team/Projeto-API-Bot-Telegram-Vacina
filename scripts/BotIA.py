@@ -5,6 +5,8 @@ import whisper
 import dotenv
 import os
 
+dotenv.load_dotenv() 
+
 modelo = os.getenv('OLLAMA_MODEL')
 historico = {}
 SYSTEM_PROMPT ='''Seu nome é Oswaldo, um assistente virtual de vacinação simpático. 
