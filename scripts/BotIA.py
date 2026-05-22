@@ -39,7 +39,7 @@ def chatIA(chat_id: int, message: str) -> str:
     global modelo
     if chat_id not in historico:
         historico[chat_id] = [{
-            'role': 'System',
+            'role': 'system',
             'content': SYSTEM_PROMPT
         }]
     historico[chat_id].append({
