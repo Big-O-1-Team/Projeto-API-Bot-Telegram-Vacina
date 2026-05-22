@@ -8,6 +8,8 @@ def main():
     dados = AcessarInformacoes()
     # Criação do Arquivo CSV
     createCSV.CriarCSV(dados)
+    # Verifica modelo IA
+    verificarModeloOllama()
     # Bot
     iniciarBOT()
 if __name__ == "__main__":
