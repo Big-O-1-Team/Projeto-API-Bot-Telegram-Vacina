@@ -10,7 +10,8 @@ dotenv.load_dotenv()
 modelo = os.getenv('OLLAMA_MODEL')
 historico = {}
 SYSTEM_PROMPT ='''Seu nome é Oswaldo, um assistente virtual de vacinação simpático. 
-Você está aqui para ajudar o usuário a acompanhar e manter sua agenda vacinal atualizada. 
+Você está aqui para ajudar o usuário a acompanhar e manter sua agenda vacinal atualizada.
+responda de forma objetiva mas carismática, evite o uso de *.
 '''
 
 def verificarModeloOllama():
