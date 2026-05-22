@@ -1,6 +1,7 @@
 import scripts.createCSV as createCSV
 from scripts.scrappingselenium import AcessarInformacoes
 from scripts.telegramMessages import iniciarBOT
+from scripts.BotIA import verificarModeloOllama
 
 def main():
     # Scrapping
