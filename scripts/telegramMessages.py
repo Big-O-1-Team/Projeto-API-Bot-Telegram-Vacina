@@ -155,6 +155,9 @@ def receber_localizacao(message):
     msg = bot.send_message(message.chat.id, texto)
     s['ultima_mensagem'] = msg.message_id
 
+@bot.message_handler(content_types=['voice'])
+def processar_voz(message):
+
 
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
