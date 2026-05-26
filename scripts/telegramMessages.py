@@ -258,7 +258,7 @@ def idadePorCategoria(message):
 def dividir_mensagem(texto, s):
     if s['texto_pag']:
         return
-    LIMITE = 900
+    LIMITE = 1000
     blocos = texto.split('\n\n')
     pagina_atual = ''
     for bloco in blocos:
@@ -281,7 +281,7 @@ def num_pags(s):
 def imprimir_infoVacinas(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
-    total_pag = num_pags(s)   # <-- único lugar que mudou aqui
+    total_pag = num_pags(s)
     pag = s['pag_atual']
     texto_pag = s['texto_pag'][pag]
     markup2 = types.InlineKeyboardMarkup(row_width=3)
