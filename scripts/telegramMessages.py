@@ -1,13 +1,11 @@
 import scripts.createCSV as createCSV
 import dotenv
 import os
-import tempfile
 import telebot
 from telebot import types
 from telebot.types import KeyboardButton
 from datetime import date, datetime
 import scripts.BotIA as IA
-import shelve
 from scripts.googlemaps import busca_no_maps as BuscarUBS
 from scripts.othercountry import listCountries, InfoAcessPCountry
 dominioGoverno = 'https://www.gov.br'
@@ -15,6 +13,7 @@ siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
 bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
+modelo = 'gemma3n:e2b'
 historicoChatIA = {}
 sessao = {}
 
@@ -27,7 +26,7 @@ def criar_sessao(chat_id):
 def limpar_sessao(chat_id):
     sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': [], 'pag_atual': 0}
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'oi'])
 def receber(message): 
     #Conseguir informações do usuário
     messageFromUser = message.from_user 
@@ -56,7 +55,7 @@ def receber(message):
         conversar_IA = types.InlineKeyboardButton('🐧 Falar com nosso agente AI Oswaldo', callback_data='ia')
         outroPais = types.InlineKeyboardButton('🗺️ Vacinas para outros países', callback_data='otherCountry')
         markup.add(calendario_vacinal, unidades_proximas, conversar_IA, outroPais)
-        bot.send_message(message.chat.id, f'Olá!🐧 {nome_exibir},meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir?', reply_markup=markup)
+        bot.send_message(message.chat.id, f'Olá! 🐧 {nome_exibir},meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir?', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -76,10 +75,10 @@ def answer(callback):
         perg_nascimento(callback.message)
     elif callback.data == 'avançar':
         s['pag_atual'] += 1
-        info_por_pag(callback.message, s, '')
+        imprimir_infoVacinas(callback.message, s, '')
     elif callback.data == "voltar":
         s['pag_atual'] -= 1
-        info_por_pag(callback.message, s, '')
+        imprimir_infoVacinas(callback.message, s, '')
     elif callback.data == 'ia':
         markup = types.InlineKeyboardMarkup(row_width=1)
         sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
@@ -114,7 +113,7 @@ def answerOtherCountry(message):
     msg = bot.send_message(message.chat.id, "🔄️ Buscando Informações, aguarde...")
     s['ultima_mensagem'] = msg.message_id
     infos = InfoAcessPCountry(message.text)
-    info_por_pag(message,s, infos)
+    imprimir_infoVacinas(message,s, infos)
 
 def botaoEscolherPessoaLoc(message):
     s =criar_sessao(message.chat.id)
@@ -156,17 +155,7 @@ def receber_localizacao(message):
     msg = bot.send_message(message.chat.id, texto)
     s['ultima_mensagem'] = msg.message_id
 
-@bot.message_handler(content_types=['voice'])
-def processar_voz(message):
-    arquivo_id = bot.get_file(message.voice.file_id)
-    arquivo_baixado = bot.download_file(arquivo_id.file_path)
-    with tempfile.NamedTemporaryFile(suffix='.ogg', delete=False) as tmp:
-        tmp.write(arquivo_baixado)
-        tmp.flush()
-        tmp_path = tmp.name
-    bot.reply_to(message, IA.chatIA(message.chat.id, f'A fala a seguir veio de uma mensagem de voz, responda de acordo: {IA.voz(tmp_path)}'))
-    os.remove(tmp_path)
-    
+
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
     sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
@@ -255,7 +244,7 @@ def idadePorCategoria(message):
         ultimoTexto = f' {tamanho} vacinas'
     texto_completo = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
     s['pag_atual'] = 0
-    info_por_pag(message, s, texto_completo)
+    imprimir_infoVacinas(message, s, texto_completo)
     try:
         bot.delete_message(
             chat_id=message.chat.id,
@@ -264,36 +253,34 @@ def idadePorCategoria(message):
         pass
 
 def dividir_mensagem(texto, s):
-    if s['texto_pag']:  
+    if s['texto_pag']:
         return
-    limite_individual = 300
-    while texto:
-        if len(texto) <= limite_individual:
-            s['texto_pag'].append(texto)
-            break
-        corte = limite_individual
-        while corte > 0 and texto[corte] != 0:
-            corte -=1
-        if corte ==0:
-            corte = limite_individual
-        s['texto_pag'].append(texto[:corte])
-        texto = texto[corte:].strip(' ')
+    LIMITE = 1000
+    blocos = texto.split('\n\n')
+    pagina_atual = ''
+    for bloco in blocos:
+        bloco = bloco.strip()
+        if not bloco:
+            continue
+        possivel = pagina_atual + '\n\n' + bloco if pagina_atual else bloco
+        if len(possivel) <= LIMITE:
+            pagina_atual = possivel
+        else:
+            if pagina_atual:
+                s['texto_pag'].append(pagina_atual)
+            pagina_atual = bloco
+    if pagina_atual:
+        s['texto_pag'].append(pagina_atual)
 
-def num_pags(texto,s):
-    if not texto:
-        return len(s['texto_pag'])
-    limite = 300
-    tamanho_texto = len(texto)
-    if tamanho_texto % limite == 0: numero_de_paginas = tamanho_texto//limite
-    else: numero_de_paginas = (tamanho_texto//limite) + 1
-    return numero_de_paginas
+def num_pags(s):
+    return len(s['texto_pag'])
 
-def info_por_pag(message, s, texto):
+def imprimir_infoVacinas(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
-    total_pag = num_pags(texto,s)
+    total_pag = num_pags(s)   # <-- único lugar que mudou aqui
     pag = s['pag_atual']
-    texto_pag = s['texto_pag'][pag]    
+    texto_pag = s['texto_pag'][pag]
     markup2 = types.InlineKeyboardMarkup(row_width=3)
     botoes = []
     if pag > 0:
