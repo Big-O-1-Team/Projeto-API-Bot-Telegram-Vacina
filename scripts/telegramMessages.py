@@ -278,7 +278,7 @@ def num_pags(s):
 def imprimir_infoVacinas(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
-    total_pag = num_pags(s)   # <-- único lugar que mudou aqui
+    total_pag = num_pags(s)
     pag = s['pag_atual']
     texto_pag = s['texto_pag'][pag]
     markup2 = types.InlineKeyboardMarkup(row_width=3)
@@ -288,6 +288,7 @@ def imprimir_infoVacinas(message, s, texto):
     botoes.append(types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia'))
     if pag < total_pag - 1:
         botoes.append(types.InlineKeyboardButton('➡️', callback_data='avançar'))
+    botoes.append(types.InlineKeyboardButton('Menu', callback_data='sair'))
     markup2.add(*botoes)
     texto_pag = s['texto_pag'][pag] + f'\n\n Página {pag + 1} de {total_pag}'
     bot.edit_message_text(
