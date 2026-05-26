@@ -152,13 +152,16 @@ def receber_localizacao(message):
         texto += UBSPRoximas[UBS]['nome'] + '\n'
         texto += UBSPRoximas[UBS]['endereco'] + '\n\n'
     print(texto)
+    markup = types.InlineKeyboardMarkup
+    botao_menu =types.InlineKeyboardButton('Menu', callback_data= 'sair')
+    markup.add(botao_menu)
     msg = bot.send_message(message.chat.id, texto)
     s['ultima_mensagem'] = msg.message_id
 
 
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
-    sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
+    sairBotao =types.InlineKeyboardButton('Menu', callback_data= 'sair')
     resposta = IA.chatIA(message.chat.id, message.text)
     markup.add(sairBotao)
     bot.send_message(message.chat.id, text= resposta, reply_markup=markup)
@@ -255,7 +258,7 @@ def idadePorCategoria(message):
 def dividir_mensagem(texto, s):
     if s['texto_pag']:
         return
-    LIMITE = 1000
+    LIMITE = 900
     blocos = texto.split('\n\n')
     pagina_atual = ''
     for bloco in blocos:
@@ -278,7 +281,7 @@ def num_pags(s):
 def imprimir_infoVacinas(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
-    total_pag = num_pags(s)
+    total_pag = num_pags(s)   # <-- único lugar que mudou aqui
     pag = s['pag_atual']
     texto_pag = s['texto_pag'][pag]
     markup2 = types.InlineKeyboardMarkup(row_width=3)
@@ -302,5 +305,3 @@ def imprimir_infoVacinas(message, s, texto):
 def iniciarBOT():
     while True:
         bot.polling(non_stop=True, interval=0, timeout=20)
-
-    
