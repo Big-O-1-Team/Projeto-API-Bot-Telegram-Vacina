@@ -5,6 +5,7 @@ import whisper
 import dotenv
 import os
 
+modelo_whisper = whisper.load_model('small')
 dotenv.load_dotenv() 
 
 modelo = os.getenv('OLLAMA_MODEL')
@@ -55,6 +56,5 @@ def chatIA(chat_id: int, message: str) -> str:
     return resposta
 
 def voz(arquivo):
-    modelo_whisper = whisper.load_model('small')
     resultado = modelo_whisper.transcribe(f'{arquivo}', language='pt')
     return resultado["text"]
