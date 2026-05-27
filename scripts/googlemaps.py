@@ -53,7 +53,7 @@ def busca_no_maps(local: str, limite: int = 5):
                 linhas.pop(2)
                 linhas.pop(2)
                 linhas.pop(2)
-                if "Fechado" or "Aberto" in linhas[1]:
+                if 'Fechado' in listas[1] or 'Aberto' in linhas [1]:
                     if "Fechado" in linhas[1]:
                         linhas[1] = linhas[1].replace("Fechado", "")
                     else:
