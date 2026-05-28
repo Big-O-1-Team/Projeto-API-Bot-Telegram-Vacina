@@ -73,7 +73,7 @@ def AcessarInformacoes():
                 print("Não foi possível pegar Servicos")
         except Exception as e:
             print(f"Ocorreu o erro {e}")
-        time.sleep(5)
+        time.sleep(1)
         print("_" * 60)
     return dados
 
