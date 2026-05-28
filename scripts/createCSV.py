@@ -2,14 +2,26 @@ import pandas as pd
 from IPython.display import display
 import csv
 import re
+CSV_CACHE = None
+
+def carregar_csv():
+    global CSV_CACHE
+    if CSV_CACHE is None:
+        CSV_CACHE = pd.read_csv('CategoriaInformacoes.csv')
+        CSV_CACHE.columns = CSV_CACHE.columns.str.strip()
+    return CSV_CACHE
+    
 #✅
 def CriarCSV(tabela):
-    df = pd.DataFrame(tabela, columns=["Categoria","Periodo", "Vacina", "Doencas Evitadas"])
+    global CSV_CACHE
+
+    df = pd.DataFrame(tabela,columns=["Categoria", "Periodo", "Vacina", "Doencas Evitadas"])
     df['Desde'] = df[['Periodo', 'Categoria']].apply(lambda row: extrairPeriodo(row['Periodo'], row['Categoria'])[0], axis=1)
-    df['Ate'] =  df[['Periodo', 'Categoria']].apply(lambda row: extrairPeriodo(row['Periodo'], row['Categoria'])[1], axis=1)
-    CSVFile = df.to_csv("CategoriaInformacoes.csv", index=False)
-    display(df)
-    return CSVFile
+    df['Ate'] = df[['Periodo', 'Categoria']].apply(lambda row: extrairPeriodo(row['Periodo'], row['Categoria'])[1], axis=1)
+    df.to_csv('CategoriaInformacoes.csv', index=False)
+    CSV_CACHE = df
+    return df
+    
 #✅
 def extrairPeriodo(periodo: str, categoria :str):
     periodo = periodo.lower().strip()
@@ -41,20 +53,18 @@ def extrairPeriodo(periodo: str, categoria :str):
                 return vetor_aux[0]*12, vetor_aux[1]*12
 #✅
 def procuraInfoPCategoria(categoria, idade):
-    with open("CategoriaInformacoes.csv", 'r', encoding = 'utf-8') as arquivo:
-        CSVFile= pd.read_csv(arquivo)
-        CSVFile.columns = CSVFile.columns.str.strip()
-        if categoria == 'gestante':
+    CSVFile = carregar_csv()
+    if categoria == 'gestante':
             infoFiltrada = CSVFile[CSVFile['Categoria'] == categoria]
-        else:
+    else:
             infoFiltrada = CSVFile[
                 (CSVFile['Categoria'] == categoria) &
                 (CSVFile['Desde']<=idade) &
                 (CSVFile['Ate']>=idade)
             ]
-        if infoFiltrada.empty:
-            return []           
-        return infoFiltrada[['Periodo', 'Vacina', 'Doencas Evitadas']].values.tolist()
+    if infoFiltrada.empty:
+        return []           
+    return infoFiltrada[['Periodo', 'Vacina', 'Doencas Evitadas']].values.tolist()
 
 def salvar_csv_ubs(resultados, arquivo='ubs_próximas.csv'):
     df = pd.DataFrame(resultados)

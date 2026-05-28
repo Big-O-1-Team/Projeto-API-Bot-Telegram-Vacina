@@ -2,11 +2,11 @@ import scripts.createCSV as createCSV
 import dotenv
 import os
 import telebot
+import re
 from telebot import types
 from telebot.types import KeyboardButton
 from datetime import date, datetime
 import scripts.BotIA as IA
-import shelve
 from scripts.googlemaps import busca_no_maps as BuscarUBS
 from scripts.othercountry import listCountries, InfoAcessPCountry
 dominioGoverno = 'https://www.gov.br'
@@ -17,6 +17,7 @@ bot = telebot.TeleBot(bot_token)
 modelo = 'gemma3n:e2b'
 historicoChatIA = {}
 sessao = {}
+processando = set()
 
 def criar_sessao(chat_id):
     if chat_id not in sessao:
@@ -27,10 +28,10 @@ def criar_sessao(chat_id):
 def limpar_sessao(chat_id):
     sessao[chat_id] = {'nomesVacinas': [], 'categoria': [], 'ultima_mensagem': None, 'texto_pag': [], 'pag_atual': 0}
 
-@bot.message_handler(commands=['start'])
-def receber(message): 
+@bot.message_handler(commands=['start', 'oi'])
+def receber(message, from_user =None): 
     #Conseguir informações do usuário
-    messageFromUser = message.from_user 
+    messageFromUser = from_user if from_user else message.from_user 
     #Salvar o nome ou username do usuário
     nome_exibir = messageFromUser.username if messageFromUser.username else messageFromUser.full_name
 
@@ -42,7 +43,7 @@ def receber(message):
         markup = types.InlineKeyboardMarkup(row_width=1)
         calendario_vacinal = types.InlineKeyboardButton('📅 Calendário de vacinas', callback_data='answer_calendario_vacinal')
         unidades_proximas = types.InlineKeyboardButton('🏥 Postos de vacinação', callback_data='answer_unidades_proximas')
-        conversar_IA = types.InlineKeyboardButton('🐧 Falar com nosso agente AI Oswaldo', callback_data='ia')
+        conversar_IA = types.InlineKeyboardButton('🐧 Quer conversar comigo?', callback_data='ia')
         outroPais = types.InlineKeyboardButton('🗺️ Vacinas para outros países', callback_data='otherCountry')
         markup.add(calendario_vacinal, unidades_proximas, conversar_IA, outroPais)
         bot.edit_message_text(message.chat.id, text='Gostaria de fazer uma nova consulta? (Selecione uma das opções abaixo)', reply_markup=markup)
@@ -53,14 +54,23 @@ def receber(message):
         markup = types.InlineKeyboardMarkup(row_width=1)
         calendario_vacinal = types.InlineKeyboardButton('📅 Calendário de vacinas', callback_data='answer_calendario_vacinal')
         unidades_proximas = types.InlineKeyboardButton('🏥 Postos de vacinação', callback_data='answer_unidades_proximas')
-        conversar_IA = types.InlineKeyboardButton('🐧 Falar com nosso agente AI Oswaldo', callback_data='ia')
+        conversar_IA = types.InlineKeyboardButton('🐧 Quer conversar comigo?', callback_data='ia')
         outroPais = types.InlineKeyboardButton('🗺️ Vacinas para outros países', callback_data='otherCountry')
         markup.add(calendario_vacinal, unidades_proximas, conversar_IA, outroPais)
-        bot.send_message(message.chat.id, f'Olá!🐧 {nome_exibir},meu nome é Oswaldo, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir?', reply_markup=markup)
+        bot.send_message(message.chat.id, f'Olá! {nome_exibir}, meu nome é Oswaldo AI🐧, seu assistente virtual de vacinação. Estou aqui para ajudar você a acompanhar e manter sua agenda vacinal atualizada. Como deseja prosseguir?', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(callback):
+    chat_id = callback.message.chat.id
+    if chat_id in processando:
+        return
+    processando.add(chat_id)
+    try:
+        bot.answer_callback_query(callback.id, text='aguarde')
+    except Exception as e:
+        print(e)
+        pass
     s = criar_sessao(callback.message.chat.id)
     try:
         bot.answer_callback_query(callback.id, text = 'aguarde')
@@ -76,18 +86,18 @@ def answer(callback):
         perg_nascimento(callback.message)
     elif callback.data == 'avançar':
         s['pag_atual'] += 1
-        info_por_pag(callback.message, s, '')
+        imprimir_infoVacinas(callback.message, s, '')
     elif callback.data == "voltar":
         s['pag_atual'] -= 1
-        info_por_pag(callback.message, s, '')
+        imprimir_infoVacinas(callback.message, s, '')
     elif callback.data == 'ia':
         markup = types.InlineKeyboardMarkup(row_width=1)
         sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
-        bot.send_message(callback.message.chat.id, 'Qual seria a sua dúvida?')
+        bot.send_message(callback.message.chat.id, 'Certo, sobre o que falaremos hoje?')
         bot.register_next_step_handler(callback.message, conversarIA)
     elif callback.data == 'sair':
         bot.clear_step_handler_by_chat_id(callback.message.chat.id)
-        receber(callback.message)
+        receber(callback.message, from_user=callback.from_user) 
     elif callback.data == "answer_unidades_proximas":
         botaoEscolherPessoaLoc(callback.message)
     elif callback.data == 'locForMe':
@@ -98,7 +108,7 @@ def answer(callback):
         return   
     elif callback.data =='otherCountry':
         messageOtherCountry(callback.message)
-
+    processando.discard(chat_id)
 def messageOtherCountry(message):
     countryButton = []
     lista = listCountries()
@@ -114,7 +124,7 @@ def answerOtherCountry(message):
     msg = bot.send_message(message.chat.id, "🔄️ Buscando Informações, aguarde...")
     s['ultima_mensagem'] = msg.message_id
     infos = InfoAcessPCountry(message.text)
-    info_por_pag(message,s, infos)
+    imprimir_infoVacinas(message,s, infos)
 
 def botaoEscolherPessoaLoc(message):
     s =criar_sessao(message.chat.id)
@@ -153,13 +163,16 @@ def receber_localizacao(message):
         texto += UBSPRoximas[UBS]['nome'] + '\n'
         texto += UBSPRoximas[UBS]['endereco'] + '\n\n'
     print(texto)
+    markup = types.InlineKeyboardMarkup(row_width= 2)
+    botao_menu =types.InlineKeyboardButton('Menu', callback_data= 'sair')
+    markup.add(botao_menu)
     msg = bot.send_message(message.chat.id, texto)
     s['ultima_mensagem'] = msg.message_id
 
 
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
-    sairBotao =types.InlineKeyboardButton('Sair', callback_data= 'sair')
+    sairBotao =types.InlineKeyboardButton('Menu', callback_data= 'sair')
     resposta = IA.chatIA(message.chat.id, message.text)
     markup.add(sairBotao)
     bot.send_message(message.chat.id, text= resposta, reply_markup=markup)
@@ -167,20 +180,31 @@ def conversarIA(message):
 
 
 def salvar_idade(idade):
+    texto = idade.text.strip().lower()
     idadeAtual = []
-    # Converte o texto digitado em uma data de verdade
-    nascimento = datetime.strptime(idade.text, "%d/%m/%Y").date()
-    # Calcula a idade em anos e meses
     hoje = date.today()
-    anos = hoje.year - nascimento.year
-    meses = hoje.month - nascimento.month
-    if hoje.day < nascimento.day:
-        meses -= 1
-    if meses < 0:
-        anos -= 1
-        meses += 12
-    anos = int(anos)
-    meses = int(meses)
+
+    try:
+        nascimento = datetime.strptime(idade.text.strip(), "%d/%m/%Y").date()
+        anos = hoje.year - nascimento.year
+        meses = hoje.month - nascimento.month
+        if hoje.day < nascimento.day:
+            meses -= 1
+        if meses < 0:
+            anos -= 1
+            meses += 12
+        idadeAtual.append(int(anos))
+        idadeAtual.append(int(meses))
+        return idadeAtual
+    except ValueError:
+        pass
+
+    match_anos = re.search(r'(\d+)\s*anos?', texto)
+    match_meses = re.search(r'(\d+)\s*m[eê]se?s?', texto)
+    anos = int(match_anos.group(1)) if match_anos else 0
+    meses = int(match_meses.group(1)) if match_meses else 0
+    if not match_anos and not match_meses:
+        raise ValueError("Formato de idade não reconhecido")
     idadeAtual.append(anos)
     idadeAtual.append(meses)
     return idadeAtual
@@ -205,11 +229,18 @@ def perg_nascimento(message):
     bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=s['ultima_mensagem'],
-        text='Qual sua data de nascimento? (DD/MM/AAAA)'
+        text='Qual sua data de nascimento ou idade?\n(Ex: 25/03/1990 ou 30 anos ou 8 meses)'
     )   
     bot.register_next_step_handler(message, idadePorCategoria)
 
 def idadePorCategoria(message):
+    s = criar_sessao(message.chat.id)
+    try:
+        idadeAtual = salvar_idade(message)
+    except ValueError:
+        bot.send_message(message.chat.id, "Não entendi o formato. Tente: 25/03/1990, '30 anos', '8 meses' ou '2 anos e 3 meses'.")
+        bot.register_next_step_handler(message, idadePorCategoria)
+        return
     s = criar_sessao(message.chat.id)
     idadeAtual = salvar_idade(message)
     idade = 12 * idadeAtual[0] + idadeAtual[1] 
@@ -245,7 +276,7 @@ def idadePorCategoria(message):
         ultimoTexto = f' {tamanho} vacinas'
     texto_completo = texto + '\n' + 'A pessoa pode tomar' + ultimoTexto
     s['pag_atual'] = 0
-    info_por_pag(message, s, texto_completo)
+    imprimir_infoVacinas(message, s, texto_completo)
     try:
         bot.delete_message(
             chat_id=message.chat.id,
@@ -254,36 +285,34 @@ def idadePorCategoria(message):
         pass
 
 def dividir_mensagem(texto, s):
-    if s['texto_pag']:  
+    if s['texto_pag']:
         return
-    limite_individual = 300
-    while texto:
-        if len(texto) <= limite_individual:
-            s['texto_pag'].append(texto)
-            break
-        corte = limite_individual
-        while corte > 0 and texto[corte] != 0:
-            corte -=1
-        if corte ==0:
-            corte = limite_individual
-        s['texto_pag'].append(texto[:corte])
-        texto = texto[corte:].strip(' ')
+    LIMITE = 600
+    blocos = texto.split('\n\n')
+    pagina_atual = ''
+    for bloco in blocos:
+        bloco = bloco.strip()
+        if not bloco:
+            continue
+        possivel = pagina_atual + '\n\n' + bloco if pagina_atual else bloco
+        if len(possivel) <= LIMITE:
+            pagina_atual = possivel
+        else:
+            if pagina_atual:
+                s['texto_pag'].append(pagina_atual)
+            pagina_atual = bloco
+    if pagina_atual:
+        s['texto_pag'].append(pagina_atual)
 
-def num_pags(texto,s):
-    if not texto:
-        return len(s['texto_pag'])
-    limite = 300
-    tamanho_texto = len(texto)
-    if tamanho_texto % limite == 0: numero_de_paginas = tamanho_texto//limite
-    else: numero_de_paginas = (tamanho_texto//limite) + 1
-    return numero_de_paginas
+def num_pags(s):
+    return len(s['texto_pag'])
 
-def info_por_pag(message, s, texto):
+def imprimir_infoVacinas(message, s, texto):
     if texto:
         dividir_mensagem(texto, s)
-    total_pag = num_pags(texto,s)
+    total_pag = num_pags(s)
     pag = s['pag_atual']
-    texto_pag = s['texto_pag'][pag]    
+    texto_pag = s['texto_pag'][pag]
     markup2 = types.InlineKeyboardMarkup(row_width=3)
     botoes = []
     if pag > 0:
@@ -291,6 +320,7 @@ def info_por_pag(message, s, texto):
     botoes.append(types.InlineKeyboardButton('Conversar com nossa IA', callback_data='ia'))
     if pag < total_pag - 1:
         botoes.append(types.InlineKeyboardButton('➡️', callback_data='avançar'))
+    botoes.append(types.InlineKeyboardButton('Menu', callback_data='sair'))
     markup2.add(*botoes)
     texto_pag = s['texto_pag'][pag] + f'\n\n Página {pag + 1} de {total_pag}'
     bot.edit_message_text(
@@ -304,5 +334,3 @@ def info_por_pag(message, s, texto):
 def iniciarBOT():
     while True:
         bot.polling(non_stop=True, interval=0, timeout=20)
-
-    
