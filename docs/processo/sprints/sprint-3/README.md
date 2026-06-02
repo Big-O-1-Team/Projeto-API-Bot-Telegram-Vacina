@@ -7,8 +7,8 @@
   
 | Rank  | Prioridade |                                                        User Story                                                            | Estimativa | Sprint
 |:-----:|:----------:|:----------------------------------------------------------------------------------------------------------------------------:|:----------:|:-----------:
-|7|Média|Como cidadão desejo saber informações sobre as campanhas sazonais de vacinação de minha região                                             |🔄|Sprint 3|
-|8|Baixa|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                                                                    |🔄|Sprint 3|
+|7|Média|Como cidadão desejo que o bot reconheça comandos por voz|✅|Sprint 3|
+|8|Baixa|Como usuário desejo saber qual será a minha próxima vacina a ser tomada                                                                    |✅|Sprint 3|
 
 </div>
 
