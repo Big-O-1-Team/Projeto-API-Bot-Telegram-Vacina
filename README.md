@@ -16,7 +16,7 @@
 </p>
 <ul>
   <li>
-    <a href='https://youtu.be/bOt2ZnG36w4>Video do funcionamento🎥</a>
+    <a href='https://youtu.be/bOt2ZnG36w4'>Video do funcionamento🎥</a>
   </li>  
 </ul>
 
