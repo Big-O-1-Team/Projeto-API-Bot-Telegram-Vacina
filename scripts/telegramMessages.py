@@ -3,6 +3,7 @@ import dotenv
 import os
 import telebot
 import re
+import tempfile
 from telebot import types
 from telebot.types import KeyboardButton
 from datetime import date, datetime
@@ -14,7 +15,6 @@ siteVacinacao = dominioGoverno + '/saude/pt-br/vacinacao/calendario'
 dotenv.load_dotenv()
 bot_token = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
-modelo = 'gemma3n:e2b'
 historicoChatIA = {}
 sessao = {}
 processando = set()
@@ -168,7 +168,20 @@ def receber_localizacao(message):
     markup.add(botao_menu)
     msg = bot.send_message(message.chat.id, texto)
     s['ultima_mensagem'] = msg.message_id
-
+    
+@bot.message_handler(content_types=['voice'])
+def processar_voz(message):
+    print("voz recebida")
+    arquivo_id = bot.get_file(message.voice.file_id)
+    arquivo_baixado = bot.download_file(arquivo_id.file_path)
+    with tempfile.NamedTemporaryFile(suffix='.ogg', delete=False) as tmp:
+        tmp.write(arquivo_baixado)
+        tmp.flush()
+        tmp_path = tmp.name
+        texto_transcrito = IA.voz(tmp_path)
+        print(f"[DEBUG] Transcrição: {texto_transcrito}")
+        bot.reply_to(message, IA.chatIA(message.chat.id, f'O usuário disse: "{texto_transcrito}". Responda ao que ele perguntou ou comentou.'))
+    os.remove(tmp_path)
 
 def conversarIA(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
@@ -177,7 +190,7 @@ def conversarIA(message):
     markup.add(sairBotao)
     bot.send_message(message.chat.id, text= resposta, reply_markup=markup)
     bot.register_next_step_handler(message, conversarIA)
-
+    
 
 def salvar_idade(idade):
     texto = idade.text.strip().lower()
